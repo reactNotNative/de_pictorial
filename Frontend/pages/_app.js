@@ -7,6 +7,8 @@ import { mainnet, polygonMumbai } from "wagmi/chains";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
 import "@biconomy/web3-auth/dist/src/style.css";
+import { createTheme, NextUIProvider } from "@nextui-org/react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 const { chains, provider } = configureChains(
   [mainnet],
   // [polygonMumbai],
@@ -26,15 +28,35 @@ const wagmiClient = createClient({
   connectors,
   provider,
 });
+const lightTheme = createTheme({
+  type: "light",
+  theme: {},
+});
+
+const darkTheme = createTheme({
+  type: "dark",
+  theme: {},
+});
 
 function MyApp({ Component, pageProps }) {
   return (
-    <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains}>
-        <Header />
-        <Component {...pageProps} />
-      </RainbowKitProvider>
-    </WagmiConfig>
+    <NextThemesProvider
+      defaultTheme="dark"
+      attribute="class"
+      value={{
+        light: lightTheme.className,
+        dark: darkTheme.className,
+      }}
+    >
+      <NextUIProvider>
+        <WagmiConfig client={wagmiClient}>
+          <RainbowKitProvider chains={chains}>
+            <Header />
+            <Component {...pageProps} />
+          </RainbowKitProvider>
+        </WagmiConfig>
+      </NextUIProvider>
+    </NextThemesProvider>
   );
 }
 
