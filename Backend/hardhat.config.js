@@ -1,9 +1,5 @@
-require("@nomicfoundation/hardhat-toolbox");
-require("@nomiclabs/hardhat-waffle");
-require("@nomiclabs/hardhat-etherscan");
-require("@openzeppelin/hardhat-upgrades");
 require("dotenv").config();
-
+// console.log(process.env);
 module.exports = {
   solidity: "0.8.17",
 
@@ -13,10 +9,18 @@ module.exports = {
     maticmumbai: {
       url: process.env.POLYGON_ALCHEMY,
       accounts: [
-        process.env.PRIVATE_KEY_1,
-        process.env.PRIVATE_KEY_2,
-        process.env.PRIVATE_KEY_3,
+        "3aa8c280f6a6e07b0eb5d046eaa92330a51f226d6f4a47945145bb613f4dbc31",
       ],
+    },
+  },
+
+  solidity: {
+    version: "0.8.9",
+    settings: {
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      },
     },
   },
   // etherscan: {
