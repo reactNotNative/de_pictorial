@@ -1,8 +1,9 @@
-import Hero from "../components/Hero";
-import { Input } from "@nextui-org/react";
-import { AiOutlineSearch } from "react-icons/ai";
-import React, { useState, useEffect, useRef } from "react";
-import FOG from "vanta/dist/vanta.fog.min.js";
+import Hero from '../components/Hero';
+import Typewriter from 'typewriter-effect';
+import { Input } from '@nextui-org/react';
+import { AiOutlineSearch } from 'react-icons/ai';
+import React, { useState, useEffect, useRef } from 'react';
+import FOG from 'vanta/dist/vanta.fog.min.js';
 
 const Home = () => {
   const [vantaEffect, setVantaEffect] = useState(null);
@@ -21,7 +22,7 @@ const Home = () => {
           midtoneColor: 0x0,
           lowlightColor: 0x9d9d9d,
           baseColor: 0x0,
-          blurFactor: 0.2,
+          blurFactor: 0.3,
         })
       );
     }
@@ -33,13 +34,26 @@ const Home = () => {
     <>
       {/* <Hero /> */}
       <div className="w-screen h-screen flex items-center" ref={myRef}>
-        <section className="container  mx-auto p-10 inline-flex flex-col gap-20 items-center justify-center min-h-screen">
-          <div className="flex flex-col items-center justify-center text-center">
-            <div className="inline-flex space-x-5 items-center justify-between">
-              <p className="text-9xl font-bold  text-white">Web3 way to</p>
+        <section className="container mx-auto p-10 inline-flex flex-col gap-20 items-start justify-center min-h-screen">
+          <div className="flex flex-col items-start justify-center gap-3 text-left">
+            <div className="inline-flex space-x-5 items-center justify-between text-8xl font-bold text-white">
+              {/* <p className="text-8xl font-bold -ml-8 text-white">
+                Your Media, Your Licence
+              </p> */}
+              <span className="font-semibold">Decentralizing </span>
+              <Typewriter
+                options={{
+                  strings: ['Ownership', 'Media', 'Licences'],
+                  deleteSpeed: 40,
+                  autoStart: true,
+                  loop: true,
+                }}
+              />
             </div>
             <div className="inline-flex space-x-5 items-center justify-end">
-              <p className="text-9xl font-bold text-center ">buy and sell</p>
+              <p className="text-7xl font-bold shadow-fuchsia-500 text-center ">
+                Liberty for Creativity
+              </p>
             </div>
           </div>
 
