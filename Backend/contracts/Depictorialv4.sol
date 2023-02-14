@@ -4,7 +4,7 @@ pragma solidity ^0.8.9;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-contract Depictorial is ReentrancyGuard {
+contract Depictorialv4 is ReentrancyGuard {
     using Counters for Counters.Counter;
     Counters.Counter private _MediaIds;
     Counters.Counter private _CollectionIds;
@@ -14,7 +14,7 @@ contract Depictorial is ReentrancyGuard {
     uint256 private platformFee = 25;
     uint256 private deno = 1000;
     // asset limit for a collection
-    uint256 private assetLimit = 10;
+    uint256 private assetLimit = 100;
     enum Type {
         Media,
         Collection,
@@ -29,7 +29,7 @@ contract Depictorial is ReentrancyGuard {
         uint256[] purchaseIds;
     }
 
-    struct MarketplaceItem {
+    struct DeItem {
         Type ItemType;
         uint256 Id;
         Type AssetType;
@@ -37,11 +37,18 @@ contract Depictorial is ReentrancyGuard {
         address payable Owner;
         uint256 Price;
         string metaData;
+        // {
+        //     name
+        //     desciption
+        //     tags
+        //     image
+        //     video
+        // }
     }
     mapping(address => User) public users;
-    MarketplaceItem[] public collections;
-    MarketplaceItem[] public medias;
-    MarketplaceItem[] public licenses;
+    DeItem[] public collections;
+    DeItem[] public medias;
+    DeItem[] public licenses;
 
     modifier onlyOwner() {
         require(msg.sender == owner, "You are not the owner");
@@ -83,6 +90,43 @@ contract Depictorial is ReentrancyGuard {
 
     constructor() {
         owner = msg.sender;
+        // fill the first index of the collections with a dummy value
+        collections.push(
+            DeItem({
+                ItemType: Type.Collection,
+                Id: 0,
+                AssetType: Type.Media,
+                AssetIds: new uint256[](0),
+                Owner: payable(address(0)),
+                Price: 0,
+                metaData: ""
+            })
+        );
+        // fill the first index of the medias with a dummy value
+        medias.push(
+            DeItem({
+                ItemType: Type.Media,
+                Id: 0,
+                AssetType: Type.Media,
+                AssetIds: new uint256[](0),
+                Owner: payable(address(0)),
+                Price: 0,
+                metaData: ""
+            })
+        );
+        // fill the first index of the licenses with a dummy value
+        licenses.push(
+            DeItem({
+                ItemType: Type.License,
+                Id: 0,
+                AssetType: Type.Media,
+                AssetIds: new uint256[](0),
+                Owner: payable(address(0)),
+                Price: 0,
+                metaData: ""
+            })
+        );
+
         registerUser();
     }
 
@@ -93,13 +137,13 @@ contract Depictorial is ReentrancyGuard {
     ) public isRegistered returns (uint256) {
         // make media limit of user 10
         require(
-            users[msg.sender].mediaIds.length <= 10,
+            users[msg.sender].mediaIds.length <= 100,
             "Media limit exceeded"
         );
         _MediaIds.increment();
         uint256 mediaId = _MediaIds.current();
         medias.push(
-            MarketplaceItem({
+            DeItem({
                 ItemType: Type.Media,
                 Id: mediaId,
                 AssetType: Type.Media,
@@ -121,7 +165,7 @@ contract Depictorial is ReentrancyGuard {
     ) public isRegistered returns (uint256) {
         // make collection limit of user 10
         require(
-            users[msg.sender].collectionIds.length <= 10,
+            users[msg.sender].collectionIds.length <= 100,
             "Collection limit exceeded"
         );
         require(
@@ -144,7 +188,7 @@ contract Depictorial is ReentrancyGuard {
         _CollectionIds.increment();
         uint256 collectionId = _CollectionIds.current();
         collections.push(
-            MarketplaceItem({
+            DeItem({
                 ItemType: Type.Collection,
                 Id: collectionId,
                 AssetType: Type.Media,
@@ -170,6 +214,7 @@ contract Depictorial is ReentrancyGuard {
             users[msg.sender].licenseIds.length <= 10,
             "License limit exceeded"
         );
+        // make asset limit of license 10
         require(
             assetIds.length <= assetLimit,
             "Asset limit exceeded for a license"
@@ -197,7 +242,7 @@ contract Depictorial is ReentrancyGuard {
         _LicenseIds.increment();
         uint256 licenseId = _LicenseIds.current();
         licenses.push(
-            MarketplaceItem({
+            DeItem({
                 ItemType: Type.License,
                 Id: licenseId,
                 AssetType: assetType,
@@ -212,38 +257,88 @@ contract Depictorial is ReentrancyGuard {
     }
 
     // get all medias in the marketplace
-    function getMedias() public view returns (MarketplaceItem[] memory) {
+    function getMedias() public view returns (DeItem[] memory) {
         return medias;
     }
 
     // get all collections in the marketplace
-    function getCollections() public view returns (MarketplaceItem[] memory) {
+    function getCollections() public view returns (DeItem[] memory) {
         return collections;
     }
 
     // get all licenses in the marketplace
-    function getLicenses() public view returns (MarketplaceItem[] memory) {
+    function getLicenses() public view returns (DeItem[] memory) {
         return licenses;
     }
 
-    // TODO: get all assets of a user
+    // given the asset type and array of asset Ids, get the assets details
+    function getAssetsDetails(
+        Type assetType,
+        uint256[] memory assetIds
+    ) public view returns (DeItem[] memory) {
+        // check asset type
+        require(
+            assetType == Type.Media ||
+                assetType == Type.Collection ||
+                assetType == Type.License,
+            "Asset type is not valid"
+        );
+        // check asset Ids
+        for (uint256 i = 0; i < assetIds.length; i++) {
+            require(
+                (assetType == Type.Media && assetIds[i] <= medias.length) ||
+                    (assetType == Type.Collection &&
+                        assetIds[i] <= collections.length) ||
+                    (assetType == Type.License &&
+                        assetIds[i] <= licenses.length),
+                "Asset Id is not valid"
+            );
+        }
+
+        DeItem[] memory assets = new DeItem[](assetIds.length);
+        for (uint256 i = 0; i < assetIds.length; i++) {
+            if (assetType == Type.Media) {
+                assets[i] = medias[assetIds[i]];
+            } else if (assetType == Type.Collection) {
+                assets[i] = collections[assetIds[i]];
+            } else {
+                assets[i] = licenses[assetIds[i]];
+            }
+        }
+        return assets;
+    }
+
     // given the address and type of the asset, get all the asset details of the user
     function getUserAssetsByType(
         address userAddress,
         Type assetType
-    ) public view returns (MarketplaceItem[] memory) {
-        MarketplaceItem[] memory userAssets;
+    ) public view isRegistered returns (DeItem[] memory) {
+        // check asset type
+        require(
+            assetType == Type.Media ||
+                assetType == Type.Collection ||
+                assetType == Type.License,
+            "Asset type is not valid"
+        );
+        // more error handling
+        require(
+            (assetType == Type.Media &&
+                users[userAddress].mediaIds.length > 0) ||
+                (assetType == Type.Collection &&
+                    users[userAddress].collectionIds.length > 0) ||
+                (assetType == Type.License &&
+                    users[userAddress].licenseIds.length > 0),
+            "User has no assets of this type"
+        );
+
+        DeItem[] memory userAssets;
         if (assetType == Type.Media) {
-            userAssets = new MarketplaceItem[](
-                users[userAddress].mediaIds.length
-            );
+            userAssets = new DeItem[](users[userAddress].mediaIds.length);
             for (uint256 i = 0; i < users[userAddress].mediaIds.length; i++) {
                 userAssets[i] = medias[users[userAddress].mediaIds[i]];
             }
         } else if (assetType == Type.Collection) {
-            userAssets = new MarketplaceItem[](
-                users[userAddress].collectionIds.length
-            );
+            userAssets = new DeItem[](users[userAddress].collectionIds.length);
             for (
                 uint256 i = 0;
                 i < users[userAddress].collectionIds.length;
@@ -254,14 +349,33 @@ contract Depictorial is ReentrancyGuard {
                 ];
             }
         } else if (assetType == Type.License) {
-            userAssets = new MarketplaceItem[](
-                users[userAddress].licenseIds.length
-            );
+            userAssets = new DeItem[](users[userAddress].licenseIds.length);
             for (uint256 i = 0; i < users[userAddress].licenseIds.length; i++) {
                 userAssets[i] = licenses[users[userAddress].licenseIds[i]];
             }
         }
         return userAssets;
+    }
+
+    // given the address, get all the purchased assets details of the user from the purchaseIds array and look into the licenses mapping to get the details of the license
+    function getUserPurchasedAssets(
+        address userAddress
+    ) public view isRegistered returns (DeItem[] memory) {
+        require(
+            (users[userAddress].purchaseIds.length > 0),
+            "User has no assets of this type"
+        );
+        DeItem[] memory userAssets;
+        userAssets = new DeItem[](users[userAddress].purchaseIds.length);
+        for (uint256 i = 0; i < users[userAddress].purchaseIds.length; i++) {
+            userAssets[i] = licenses[users[userAddress].purchaseIds[i]];
+        }
+        return userAssets;
+    }
+
+    function transferEther(address payable recipient, uint256 amount) internal {
+        require(msg.sender.balance >= amount, "Insufficient balance");
+        recipient.transfer(amount);
     }
 
     // function to buy a license of a asset given the license Id, but before buying the license, the user must be registered and the license Id must be valid and the user must pay the correct price, but the ownership will be transferred to the buyer and the license will be added to the buyer's license array
@@ -277,25 +391,21 @@ contract Depictorial is ReentrancyGuard {
             _price == licenses[licenseId].Price,
             "Please pay the correct price"
         );
+        // make sure the user is not the owner of the license
+        require(
+            licenses[licenseId].Owner != msg.sender,
+            "You are the owner of this license"
+        );
+        // transfer the ownership of the license to the buyer
+        // licenses[licenseId].Owner = payable(msg.sender);
 
-        // transfer the license to the buyer with proper checks
-        address buyer = msg.sender;
-        address seller = licenses[licenseId].Owner;
-        uint256 price = _price;
-        uint256 gasLeft = gasleft();
-        bool transferSuccess;
+        // transfer the price to the owner of the license
+        // payable(licenses[licenseId].Owner).transfer(_price);
 
-        // Use the low-level call to prevent reentrancy attacks
-        // Also store the success value and return data
-        assembly {
-            let x := call(gasLeft, seller, price, 0, 0, 0, 0)
-            transferSuccess := eq(x, 0)
-        }
-
-        require(transferSuccess, "Transfer failed");
+        transferEther(payable(licenses[licenseId].Owner), _price);
 
         // add the license to the buyer's license array
-        users[buyer].purchaseIds.push(licenseId);
+        users[msg.sender].purchaseIds.push(licenseId);
         return true;
     }
 
@@ -306,6 +416,21 @@ contract Depictorial is ReentrancyGuard {
         }
         users[msg.sender] = User({
             userAddress: payable(msg.sender),
+            mediaIds: new uint256[](0),
+            collectionIds: new uint256[](0),
+            licenseIds: new uint256[](0),
+            purchaseIds: new uint256[](0)
+        });
+        return true;
+    }
+
+    // function to register a user, from msg.sender, return the user Id
+    function registerUser(address _addr) public onlyOwner returns (bool) {
+        if (users[msg.sender].userAddress != address(0)) {
+            return true;
+        }
+        users[msg.sender] = User({
+            userAddress: payable(_addr),
             mediaIds: new uint256[](0),
             collectionIds: new uint256[](0),
             licenseIds: new uint256[](0),
