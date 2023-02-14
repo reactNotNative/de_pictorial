@@ -1,16 +1,16 @@
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
 // import openseaLogo from '../assets/opensea.png'
-import { AiOutlineSearch } from "react-icons/ai";
-import { CgProfile } from "react-icons/cg";
-import { AiOutlineWallet } from "react-icons/ai";
-import { MdOutlineAccountBalanceWallet } from "react-icons/md";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
-import Logo from "../public/logo.svg";
-import { Button } from "@nextui-org/react";
+import { AiOutlineSearch } from 'react-icons/ai';
+import { CgProfile } from 'react-icons/cg';
+import { AiOutlineWallet } from 'react-icons/ai';
+import { MdOutlineAccountBalanceWallet } from 'react-icons/md';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+import Logo from '../public/logo.svg';
+import { Button } from '@nextui-org/react';
 const style = {
   wrapper: `bg-[#04111d] w-screen px-[1.2rem] py-[0.8rem] flex `,
   logoContainer: `flex items-center cursor-pointer`,
@@ -25,7 +25,7 @@ const style = {
 
 const Header = () => {
   const SocialLoginDynamic = dynamic(
-    () => import("../components/scw.jsx").then((res) => res.default),
+    () => import('../components/scw.jsx').then((res) => res.default),
     {
       ssr: false,
     }
@@ -88,7 +88,7 @@ const Header = () => {
               href="/"
               className="text-base tracking-wide leading-relaxed text-white hover:opacity-60 transition ease-in-out duration-200"
             >
-              Sell
+              Dashboard
             </Link>
           </div>
           <div className="w-full flex justify-end">
@@ -98,7 +98,7 @@ const Header = () => {
               icon={<AiOutlineWallet size="20" />}
               css={{
                 background:
-                  "conic-gradient(at right bottom, rgb(136, 19, 55), rgb(225, 29, 72), rgb(217, 70, 239))",
+                  'conic-gradient(at right bottom, rgb(136, 19, 55), rgb(225, 29, 72), rgb(217, 70, 239))',
               }}
             >
               <p className="text-base tracking-wide leading-relaxed text-white">
