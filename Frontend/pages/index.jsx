@@ -1,12 +1,19 @@
-import Hero from '../components/Hero';
-import Typewriter from 'typewriter-effect';
-import { Input } from '@nextui-org/react';
-import { AiOutlineSearch } from 'react-icons/ai';
-import React, { useState, useEffect, useRef } from 'react';
-import FOG from 'vanta/dist/vanta.fog.min.js';
+import Typewriter from "typewriter-effect";
+import { AiOutlineSearch, AiOutlineArrowRight } from "react-icons/ai";
+import React, { useState, useEffect, useRef } from "react";
+import FOG from "vanta/dist/vanta.fog.min.js";
+import DisplayCard from "./../components/DisplayCard";
+import {
+  TextInput,
+  TextInputProps,
+  ActionIcon,
+  useMantineTheme,
+} from "@mantine/core";
 
 const Home = () => {
   const [vantaEffect, setVantaEffect] = useState(null);
+  const theme = useMantineTheme();
+
   const myRef = useRef(null);
   useEffect(() => {
     if (!vantaEffect) {
@@ -33,7 +40,7 @@ const Home = () => {
   return (
     <>
       {/* <Hero /> */}
-      <div className="w-screen h-screen flex items-center" ref={myRef}>
+      <div className="w-screen h-full flex flex-col items-center" ref={myRef}>
         <section className="container mx-auto p-10 inline-flex flex-col gap-20 items-start justify-center min-h-screen">
           <div className="flex flex-col items-start justify-center gap-3 text-left">
             <div className="inline-flex space-x-5 items-center justify-between text-8xl font-bold text-white">
@@ -43,7 +50,7 @@ const Home = () => {
               <span className="font-semibold">Decentralizing </span>
               <Typewriter
                 options={{
-                  strings: ['Ownership', 'Media', 'Licences'],
+                  strings: ["Ownership", "Media", "Licences"],
                   deleteSpeed: 40,
                   autoStart: true,
                   loop: true,
@@ -57,14 +64,46 @@ const Home = () => {
             </div>
           </div>
 
-          <Input
-            labelLeft={<AiOutlineSearch size="2rem" />}
-            bordered
-            placeholder="Search by item, author, category"
-            color="default"
-            width="60%"
+          <TextInput
+            icon={<AiOutlineSearch size="2rem" />}
+            radius="lg"
             size="xl"
+            className="w-1/2"
+            styles={{
+              input: {
+                "&:hover": { borderColor: "white" },
+                "&:focus": { borderColor: "white" },
+                background: "none",
+                borderWidth: "4px",
+              },
+            }}
+            rightSection={
+              <ActionIcon
+                size="xl"
+                radius="md"
+                color={theme.primaryColor}
+                variant="filled"
+              >
+                <AiOutlineArrowRight size="2rem" />
+              </ActionIcon>
+            }
+            rightSectionWidth={64}
+            placeholder="Search by item, author, category"
           />
+        </section>
+        <section className="container mx-auto p-10 inline-flex flex-col gap-10 items-start justify-center min-h-screen">
+          <div className="inline-flex space-x-5 items-end justify-start">
+            <p className="text-4xl font-bold leading-10">Featured</p>
+            <p className="text-base font-bold leading-tight text-gray-400">
+              See all
+            </p>
+          </div>
+          <div className="flex gap-10 overflow-x-auto w-full">
+            {" "}
+            {[...Array(10)].map(() => (
+              <DisplayCard />
+            ))}
+          </div>
         </section>
       </div>
     </>

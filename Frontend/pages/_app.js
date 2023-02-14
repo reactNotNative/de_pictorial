@@ -8,7 +8,7 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
 import "@biconomy/web3-auth/dist/src/style.css";
 import { createTheme, NextUIProvider } from "@nextui-org/react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { MantineProvider, createEmotionCache } from "@mantine/core";
 const { chains, provider } = configureChains(
   [mainnet],
   // [polygonMumbai],
@@ -28,35 +28,30 @@ const wagmiClient = createClient({
   connectors,
   provider,
 });
-const lightTheme = createTheme({
-  type: "light",
-  theme: {},
-});
 
-const darkTheme = createTheme({
-  type: "dark",
-  theme: {},
+const myCache = createEmotionCache({
+  key: "mantine",
+  prepend: false,
 });
 
 function MyApp({ Component, pageProps }) {
   return (
-    <NextThemesProvider
-      defaultTheme="dark"
-      attribute="class"
-      value={{
-        light: lightTheme.className,
-        dark: darkTheme.className,
+    <MantineProvider
+      withGlobalStyles
+      withCSSVariables
+      withNormalizeCSS
+      emotionCache={myCache}
+      theme={{
+        colorScheme: "dark",
       }}
     >
-      <NextUIProvider>
-        <WagmiConfig client={wagmiClient}>
-          <RainbowKitProvider chains={chains}>
-            <Header />
-            <Component {...pageProps} />
-          </RainbowKitProvider>
-        </WagmiConfig>
-      </NextUIProvider>
-    </NextThemesProvider>
+      <WagmiConfig client={wagmiClient}>
+        <RainbowKitProvider chains={chains}>
+          <Header />
+          <Component {...pageProps} />
+        </RainbowKitProvider>
+      </WagmiConfig>
+    </MantineProvider>
   );
 }
 

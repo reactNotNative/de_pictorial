@@ -1,31 +1,20 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import React from 'react';
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 // import openseaLogo from '../assets/opensea.png'
-import { AiOutlineSearch } from 'react-icons/ai';
-import { CgProfile } from 'react-icons/cg';
-import { AiOutlineWallet } from 'react-icons/ai';
-import { MdOutlineAccountBalanceWallet } from 'react-icons/md';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
-import Logo from '../public/logo.svg';
-import { Button } from '@nextui-org/react';
-const style = {
-  wrapper: `bg-[#04111d] w-screen px-[1.2rem] py-[0.8rem] flex `,
-  logoContainer: `flex items-center cursor-pointer`,
-  logoText: ` ml-[0.8rem] text-white font-semibold text-2xl`,
-  searchBar: `flex flex-1 mx-[0.8rem] w-max-[520px] items-center bg-[#363840] rounded-[0.8rem] hover:bg-[#4c505c]`,
-  searchIcon: `text-[#8a939b] mx-3 font-bold text-lg`,
-  searchInput: `h-[2.6rem] w-full border-0 bg-transparent outline-0 ring-0 px-2 pl-0 text-[#e6e8eb] placeholder:text-[#8a939b]`,
-  headerItems: ` flex items-center justify-end`,
-  headerItem: `text-white px-4 font-bold text-[#c8cacd] hover:text-white cursor-pointer`,
-  headerIcon: `text-[#8a939b] text-3xl font-black px-4 hover:text-white cursor-pointer`,
-};
+import { AiOutlineSearch } from "react-icons/ai";
+import { CgProfile } from "react-icons/cg";
+import { AiOutlineWallet } from "react-icons/ai";
+import { MdOutlineAccountBalanceWallet } from "react-icons/md";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+import Logo from "../public/logo.svg";
+import { Button } from "@mantine/core";
 
 const Header = () => {
   const SocialLoginDynamic = dynamic(
-    () => import('../components/scw.jsx').then((res) => res.default),
+    () => import("../components/scw.jsx").then((res) => res.default),
     {
       ssr: false,
     }
@@ -66,8 +55,8 @@ const Header = () => {
           </div>
         </div>
       </div> */}
-      <nav className="flex w-screen fixed p-10 z-10">
-        <div className="flex container mx-auto bg-black bg-opacity-40 backdrop-blur-md rounded-3xl px-10 py-3.5 items-center justify-between">
+      <nav className="flex w-screen fixed top-0 p-5  z-10">
+        <div className="flex container mx-auto bg-black bg-opacity-40 backdrop-blur-md rounded-3xl px-6 py-5 items-center justify-between">
           <div className="w-full">
             <img src={Logo.src} alt="" />
           </div>
@@ -93,17 +82,12 @@ const Header = () => {
           </div>
           <div className="w-full flex justify-end">
             <Button
-              color="gradient"
-              auto
-              icon={<AiOutlineWallet size="20" />}
-              css={{
-                background:
-                  'conic-gradient(at right bottom, rgb(136, 19, 55), rgb(225, 29, 72), rgb(217, 70, 239))',
-              }}
+              size="md"
+              leftIcon={<AiOutlineWallet size="20" />}
+              variant="gradient"
+              gradient={{ from: "indigo", to: "cyan" }}
             >
-              <p className="text-base tracking-wide leading-relaxed text-white">
-                Connect Wallet
-              </p>
+              Connect Wallet
             </Button>
           </div>
         </div>
