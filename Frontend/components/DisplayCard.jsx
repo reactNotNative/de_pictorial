@@ -1,12 +1,14 @@
 import React from "react";
 import { AiOutlineHeart } from "react-icons/ai";
 import { Badge, Button } from "@mantine/core";
-import  Router  from 'next/router';
+import Router from "next/router";
 
 const DisplayCard = () => {
   return (
-    <div onClick={() => Router.push(`/media/${id}`)}
-     className="inline-flex shrink-0 flex-col space-y-5 items-start justify-start w-80 px-5 py-8 border-2 rounded-2xl border-gray-400">
+    <div
+      onClick={() => Router.push(`/media/${id}`)}
+      className="inline-flex shrink-0 flex-col space-y-5 items-start justify-start w-80 px-5 py-8 border-2 rounded-2xl border-gray-400"
+    >
       <div className="flex flex-col items-center justify-end  w-full rounded-2xl">
         <div
           className="inline-flex items-end grow justify-center rounded-lg h-72 px-4 pb-4 w-full object-contain"
@@ -49,7 +51,14 @@ const DisplayCard = () => {
             </Badge>
           </div>
         </div>
-        <Button variant="outline" size="md" color="gray">
+        <Button
+          className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
+          size="md"
+          color="gray"
+          styles={{
+            root:{border: "none",}
+          }}
+        >
           0.5 Mat
         </Button>
       </div>

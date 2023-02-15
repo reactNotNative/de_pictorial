@@ -127,32 +127,32 @@ const Header = () => {
                       if (!connected) {
                         return (
                           <Button
-                          onClick={openConnectModal}
-                          size="md"
-                          leftIcon={<AiOutlineWallet size="20" />}
-                          className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
-                          styles={{
-                            root:{border: "none",}
-                          }}
-                        >
-                          Connect Wallet
-                        </Button>
+                            onClick={openConnectModal}
+                            size="md"
+                            leftIcon={<AiOutlineWallet size="20" />}
+                            className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
+                            styles={{
+                              root: { border: "none" },
+                            }}
+                          >
+                            Connect Wallet
+                          </Button>
                         );
                       }
 
                       if (chain.unsupported) {
                         return (
                           <Button
-                          onClick={openChainModal}
-                          size="md"
-                          leftIcon={<AiOutlineWallet size="20" />}
-                          className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
-                          styles={{
-                            root:{border: "none",}
-                          }}
-                        >
-                          Wrong network
-                        </Button>
+                            onClick={openChainModal}
+                            size="md"
+                            leftIcon={<AiOutlineWallet size="20" />}
+                            className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
+                            styles={{
+                              root: { border: "none" },
+                            }}
+                          >
+                            Wrong network
+                          </Button>
                         );
                       }
 
@@ -186,17 +186,16 @@ const Header = () => {
                             {chain.name}
                           </button>
                           <Button
-                          onClick={openAccountModal}
-              size="md"
-              leftIcon={<AiOutlineWallet size="20" />}
-              className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
-              styles={{
-                root:{border: "none",}
-              }}
-            >
-             {account.displayName}
-            </Button>
-                        
+                            onClick={openAccountModal}
+                            size="md"
+                            leftIcon={<AiOutlineWallet size="20" />}
+                            className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
+                            styles={{
+                              root: { border: "none" },
+                            }}
+                          >
+                            {account.displayName}
+                          </Button>
                         </div>
                       );
                     })()}
