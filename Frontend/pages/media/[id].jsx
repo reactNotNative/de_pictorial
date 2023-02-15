@@ -1,10 +1,38 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Badge, Button } from "@mantine/core";
 import { AiOutlineHeart } from "react-icons/ai";
+import FOG from "vanta/dist/vanta.fog.min.js";
 
 const index = () => {
+  const [vantaEffect, setVantaEffect] = useState(null);
+  const myRef = useRef(null);
+  useEffect(() => {
+    if (!vantaEffect) {
+      setVantaEffect(
+        FOG({
+          el: myRef.current,
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.0,
+          minWidth: 200.0,
+          highlightColor: 0x424242,
+          midtoneColor: 0x0,
+          lowlightColor: 0x9d9d9d,
+          baseColor: 0x0,
+          blurFactor: 0.3,
+        })
+      );
+    }
+    return () => {
+      if (vantaEffect) vantaEffect.destroy();
+    };
+  }, [vantaEffect]);
   return (
-    <div className="w-screen h-screen flex pt-24 items-center">
+    <div
+      className="w-screen h-screen flex pt-24 overflow-hidden items-center"
+      ref={myRef}
+    >
       <div className="inline-flex gap-10 container mx-auto w-full h-full items-start justify-start px-10 py-12 rounded-2xl">
         <div className="inline-flex flex-col items-center justify-end px-4 py-4 bg-black rounded-xl h-full w-full"></div>
         <div className="inline-flex flex-col space-y-5 items-start justify-between w-5/12 h-full">

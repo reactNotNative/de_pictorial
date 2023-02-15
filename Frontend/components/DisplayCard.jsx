@@ -39,8 +39,12 @@ const DisplayCard = () => {
             Anna Haidak
           </p>
           <div className="inline-flex space-x-1 py-2 items-start justify-start w-full">
-            <Badge color="gray">Badge</Badge>
-            <Badge color="gray">Badge</Badge>
+            <Badge color="gray" variant="outline">
+              Badge
+            </Badge>
+            <Badge color="gray" variant="outline">
+              Badge
+            </Badge>
           </div>
         </div>
         <Button variant="outline" size="md" color="gray">

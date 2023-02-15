@@ -21,20 +21,7 @@ const useStyles = createStyles((theme) => ({
     gap: '20px',
     width: '100%',
     cursor: 'pointer',
-    scrollbarWidth: 'none',
     padding: '8px 0',
-
-    '&::-webkit-scrollbar': {
-      height: '5px',
-    },
-
-    '&::-webkit-scrollbar-track': {
-      backgroundColor: '#302c2c',
-    },
-
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: '#b8b3b3',
-    },
   },
 }));
 
@@ -123,7 +110,7 @@ const Home = () => {
             placeholder="Search by item, author, category"
           />
         </section>
-        <section className="container w-[95%] backdrop-blur-sm bg-opacity-10 rounded-t-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center min-h-screen">
+        <section className="container w-[95%] backdrop-blur-md bg-opacity-10 rounded-t-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
           <div className="inline-flex items-end justify-start space-x-5">
             <p className="text-4xl font-bold leading-10">Featured</p>
             <p className="text-base font-bold leading-tight text-gray-400">
