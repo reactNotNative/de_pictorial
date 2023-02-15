@@ -84,8 +84,6 @@ const Header = () => {
             {/* <Button
               size="md"
               leftIcon={<AiOutlineWallet size="20" />}
-              // variant="gradient"
-              // gradient={{ from: "indigo", to: "cyan" }}
               className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
               styles={{
                 root:{border: "none",}
@@ -128,17 +126,33 @@ const Header = () => {
                     {(() => {
                       if (!connected) {
                         return (
-                          <button onClick={openConnectModal} type="button">
-                            Connect Wallet
-                          </button>
+                          <Button
+                          onClick={openConnectModal}
+                          size="md"
+                          leftIcon={<AiOutlineWallet size="20" />}
+                          className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
+                          styles={{
+                            root:{border: "none",}
+                          }}
+                        >
+                          Connect Wallet
+                        </Button>
                         );
                       }
 
                       if (chain.unsupported) {
                         return (
-                          <button onClick={openChainModal} type="button">
-                            Wrong network
-                          </button>
+                          <Button
+                          onClick={openChainModal}
+                          size="md"
+                          leftIcon={<AiOutlineWallet size="20" />}
+                          className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
+                          styles={{
+                            root:{border: "none",}
+                          }}
+                        >
+                          Wrong network
+                        </Button>
                         );
                       }
 
@@ -171,13 +185,18 @@ const Header = () => {
                             )}
                             {chain.name}
                           </button>
-
-                          <button onClick={openAccountModal} type="button">
-                            {account.displayName}
-                            {/* {account.balanceFormatted
-                              ? ` (${account.balanceFormatted})`
-                              : ""} */}
-                          </button>
+                          <Button
+                          onClick={openAccountModal}
+              size="md"
+              leftIcon={<AiOutlineWallet size="20" />}
+              className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
+              styles={{
+                root:{border: "none",}
+              }}
+            >
+             {account.displayName}
+            </Button>
+                        
                         </div>
                       );
                     })()}
