@@ -22,6 +22,7 @@
     "@rainbow-me/rainbowkit": "0.4.5",
     "dotenv": "^16.0.3",
     "ethers": "5.7.2",
+    "jotai": "^2.0.1",
     "next": "13.1.6",
     "next-themes": "^0.2.1",
     "nft.storage": "^7.0.0",

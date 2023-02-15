@@ -1,7 +1,7 @@
 import React, { MouseEvent, useRef, ReactElement } from 'react';
 
 const Draggable = ({ className, children }) => {
-  const slider = useRef < HTMLDivElement > null;
+  const slider = useRef(null);
 
   let mouseDown = false;
   let startX, scrollLeft;

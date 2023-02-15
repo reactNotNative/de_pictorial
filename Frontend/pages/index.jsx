@@ -1,18 +1,50 @@
-import Typewriter from "typewriter-effect";
-import { AiOutlineSearch, AiOutlineArrowRight } from "react-icons/ai";
-import React, { useState, useEffect, useRef } from "react";
-import FOG from "vanta/dist/vanta.fog.min.js";
-import DisplayCard from "./../components/DisplayCard";
+import Typewriter from 'typewriter-effect';
+import { AiOutlineSearch, AiOutlineArrowRight } from 'react-icons/ai';
+import React, { useState, useEffect, useRef } from 'react';
+import FOG from 'vanta/dist/vanta.fog.min.js';
+import DisplayCard from './../components/DisplayCard';
 import {
   TextInput,
-  TextInputProps,
   ActionIcon,
   useMantineTheme,
-} from "@mantine/core";
+  createStyles,
+} from '@mantine/core';
+import Draggable from '../components/Draggable';
+import { useAtom } from 'jotai';
+import { userData } from '../store/global';
+
+const useStyles = createStyles((theme) => ({
+  draggable: {
+    display: 'flex',
+    marginBottom: '16px',
+    overflowX: 'auto',
+    gap: '20px',
+    width: '100%',
+    cursor: 'pointer',
+    scrollbarWidth: 'none',
+    padding: '8px 0',
+
+    '&::-webkit-scrollbar': {
+      height: '5px',
+    },
+
+    '&::-webkit-scrollbar-track': {
+      backgroundColor: '#302c2c',
+    },
+
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: '#b8b3b3',
+    },
+  },
+}));
 
 const Home = () => {
   const [vantaEffect, setVantaEffect] = useState(null);
+  const { classes } = useStyles();
+  const [user, setUser] = useAtom(userData);
   const theme = useMantineTheme();
+
+  console.log(user);
 
   const myRef = useRef(null);
   useEffect(() => {
@@ -40,25 +72,25 @@ const Home = () => {
   return (
     <>
       {/* <Hero /> */}
-      <div className="w-screen h-full flex flex-col items-center" ref={myRef}>
-        <section className="container mx-auto p-10 inline-flex flex-col gap-20 items-start justify-center min-h-screen">
+      <div className="flex flex-col items-center w-screen h-full" ref={myRef}>
+        <section className="container inline-flex flex-col items-start justify-center min-h-screen gap-20 p-10 mx-auto">
           <div className="flex flex-col items-start justify-center gap-3 text-left">
-            <div className="inline-flex space-x-5 items-center justify-between text-8xl font-bold text-white">
-              {/* <p className="text-8xl font-bold -ml-8 text-white">
+            <div className="inline-flex items-center justify-between space-x-5 font-bold text-white text-8xl">
+              {/* <p className="-ml-8 font-bold text-white text-8xl">
                 Your Media, Your Licence
               </p> */}
               <span className="font-semibold">Decentralizing </span>
               <Typewriter
                 options={{
-                  strings: ["Ownership", "Media", "Licences"],
+                  strings: ['Ownership', 'Media', 'Licences'],
                   deleteSpeed: 40,
                   autoStart: true,
                   loop: true,
                 }}
               />
             </div>
-            <div className="inline-flex space-x-5 items-center justify-end">
-              <p className="text-7xl font-bold shadow-fuchsia-500 text-center ">
+            <div className="inline-flex items-center justify-end space-x-5">
+              <p className="font-bold text-center text-7xl shadow-fuchsia-500 ">
                 Liberty for Creativity
               </p>
             </div>
@@ -71,10 +103,10 @@ const Home = () => {
             className="w-1/2"
             styles={{
               input: {
-                "&:hover": { borderColor: "white" },
-                "&:focus": { borderColor: "white" },
-                background: "none",
-                borderWidth: "4px",
+                '&:hover': { borderColor: 'white' },
+                '&:focus': { borderColor: 'white' },
+                background: 'none',
+                borderWidth: '4px',
               },
             }}
             rightSection={
@@ -91,18 +123,23 @@ const Home = () => {
             placeholder="Search by item, author, category"
           />
         </section>
-        <section className="container mx-auto p-10 inline-flex flex-col gap-10 items-start justify-center min-h-screen">
-          <div className="inline-flex space-x-5 items-end justify-start">
+        <section className="container w-[95%] backdrop-blur-sm bg-opacity-10 rounded-t-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center min-h-screen">
+          <div className="inline-flex items-end justify-start space-x-5">
             <p className="text-4xl font-bold leading-10">Featured</p>
             <p className="text-base font-bold leading-tight text-gray-400">
               See all
             </p>
           </div>
-          <div className="flex gap-10 overflow-x-auto w-full">
-            {" "}
-            {[...Array(10)].map(() => (
-              <DisplayCard />
-            ))}
+          <div className="flex w-full gap-10 overflow-x-auto">
+            <Draggable className={classes.draggable}>
+              <>
+                {[...Array(10)].map(() => (
+                  <div className={classes.card}>
+                    <DisplayCard />
+                  </div>
+                ))}
+              </>
+            </Draggable>
           </div>
         </section>
       </div>
