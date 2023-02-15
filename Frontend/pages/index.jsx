@@ -1,27 +1,28 @@
-import Typewriter from 'typewriter-effect';
-import { AiOutlineSearch, AiOutlineArrowRight } from 'react-icons/ai';
-import React, { useState, useEffect, useRef } from 'react';
-import FOG from 'vanta/dist/vanta.fog.min.js';
-import DisplayCard from './../components/DisplayCard';
+import Typewriter from "typewriter-effect";
+import { AiOutlineSearch, AiOutlineArrowRight } from "react-icons/ai";
+import React, { useState, useEffect, useRef } from "react";
+import FOG from "vanta/dist/vanta.fog.min.js";
+import DisplayCard from "./../components/DisplayCard";
 import {
   TextInput,
   ActionIcon,
   useMantineTheme,
   createStyles,
-} from '@mantine/core';
-import Draggable from '../components/Draggable';
-import { useAtom } from 'jotai';
-import { userData } from '../store/global';
+  Button,
+} from "@mantine/core";
+import Draggable from "../components/Draggable";
+import { useAtom } from "jotai";
+import { userData } from "../store/global";
 
 const useStyles = createStyles((theme) => ({
   draggable: {
-    display: 'flex',
-    marginBottom: '16px',
-    overflowX: 'auto',
-    gap: '20px',
-    width: '100%',
-    cursor: 'pointer',
-    padding: '8px 0',
+    display: "flex",
+    marginBottom: "16px",
+    overflowX: "auto",
+    gap: "20px",
+    width: "100%",
+    cursor: "pointer",
+    padding: "8px 0",
   },
 }));
 
@@ -69,7 +70,7 @@ const Home = () => {
               <span className="font-semibold">Decentralizing </span>
               <Typewriter
                 options={{
-                  strings: ['Ownership', 'Media', 'Licences'],
+                  strings: ["Ownership", "Media", "Licences"],
                   deleteSpeed: 40,
                   autoStart: true,
                   loop: true,
@@ -90,21 +91,22 @@ const Home = () => {
             className="w-1/2"
             styles={{
               input: {
-                '&:hover': { borderColor: 'white' },
-                '&:focus': { borderColor: 'white' },
-                background: 'none',
-                borderWidth: '4px',
+                "&:hover": { borderColor: "white" },
+                "&:focus": { borderColor: "white" },
+                background: "none",
+                borderWidth: "2px",
               },
             }}
             rightSection={
-              <ActionIcon
-                size="xl"
-                radius="md"
-                color={theme.primaryColor}
-                variant="filled"
+              <Button
+                size="md"
+                className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
+                styles={{
+                  root: { border: "none", padding: "2px 6px" },
+                }}
               >
                 <AiOutlineArrowRight size="2rem" />
-              </ActionIcon>
+              </Button>
             }
             rightSectionWidth={64}
             placeholder="Search by item, author, category"

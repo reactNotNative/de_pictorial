@@ -84,8 +84,12 @@ const Header = () => {
             <Button
               size="md"
               leftIcon={<AiOutlineWallet size="20" />}
-              variant="gradient"
-              gradient={{ from: "indigo", to: "cyan" }}
+              // variant="gradient"
+              // gradient={{ from: "indigo", to: "cyan" }}
+              className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
+              styles={{
+                root:{border: "none",}
+              }}
             >
               Connect Wallet
             </Button>

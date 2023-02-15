@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Badge, Button } from "@mantine/core";
 import { AiOutlineHeart } from "react-icons/ai";
 import FOG from "vanta/dist/vanta.fog.min.js";
+import SubscriptionLabel from './../../components/SubscriptionLabel';
 
 const index = () => {
   const [vantaEffect, setVantaEffect] = useState(null);
@@ -91,7 +92,9 @@ const index = () => {
               </div>
             </div>
           </div>
-          <div className="inline-flex items-center justify-end h-32 py-2 rounded-2xl" />
+          <div className="inline-flex w-full">
+            <SubscriptionLabel />
+          </div>
         </div>
       </div>
     </div>
