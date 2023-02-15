@@ -1,26 +1,26 @@
-import '../styles/globals.css';
-import '@rainbow-me/rainbowkit/styles.css';
-import { Provider } from 'jotai';
-import Header from '../components/Header';
-import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
-import { mainnet, polygonMumbai } from 'wagmi/chains';
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
-import { publicProvider } from 'wagmi/providers/public';
-import '@biconomy/web3-auth/dist/src/style.css';
-import { createTheme, NextUIProvider } from '@nextui-org/react';
-import { MantineProvider, createEmotionCache } from '@mantine/core';
+import "../styles/globals.css";
+import "@rainbow-me/rainbowkit/styles.css";
+import { Provider } from "jotai";
+import Header from "../components/Header";
+import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { chain, configureChains, createClient, WagmiConfig } from "wagmi";
+import { mainnet, polygonMumbai } from "wagmi/chains";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
+import { publicProvider } from "wagmi/providers/public";
+import "@biconomy/web3-auth/dist/src/style.css";
+import { createTheme, NextUIProvider } from "@nextui-org/react";
+import { MantineProvider, createEmotionCache } from "@mantine/core";
 const { chains, provider } = configureChains(
-  [mainnet],
-  // [polygonMumbai],
+  // [mainnet],
+  [polygonMumbai],
   [
-    jsonRpcProvider({ rpc: () => ({ http: 'https://rpc.ankr.com/eth' }) }),
+    jsonRpcProvider({ rpc: () => ({ http: "https://rpc.ankr.com/eth" }) }),
     publicProvider(),
   ]
 );
 
 const { connectors } = getDefaultWallets({
-  appName: 'My RainbowKit App',
+  appName: "Depictorial",
   chains,
 });
 
@@ -31,7 +31,7 @@ const wagmiClient = createClient({
 });
 
 const myCache = createEmotionCache({
-  key: 'mantine',
+  key: "mantine",
   prepend: false,
 });
 
@@ -44,7 +44,7 @@ function MyApp({ Component, pageProps }) {
         withNormalizeCSS
         emotionCache={myCache}
         theme={{
-          colorScheme: 'dark',
+          colorScheme: "dark",
         }}
       >
         <WagmiConfig client={wagmiClient}>

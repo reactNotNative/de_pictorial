@@ -23,7 +23,8 @@ contract Depictorial is ReentrancyGuard {
     enum DeItemType {
         Image,
         Video,
-        Audio
+        Audio,
+        Meme
     }
     struct User {
         address payable userAddress;
@@ -96,6 +97,7 @@ contract Depictorial is ReentrancyGuard {
             })
         );
         registerUser();
+        init();
     }
 
     modifier onlyOwner() {
@@ -166,6 +168,93 @@ contract Depictorial is ReentrancyGuard {
         );
         users[msg.sender].licenseIds.push(newLicenseId);
         return newLicenseId;
+    }
+
+    // function getAllAtomicsByItemType returns all the atomics of a particular ItemType and also return the data of the licenses of the atomics
+    // create a struct to return the data of the licenses of the atomics
+    struct AtomicLicense {
+        uint256 Id;
+        address payable Owner;
+        uint256 Price;
+        uint Duration;
+    }
+    // create a struct to return the data of the atomics
+    struct Atomic {
+        uint256 Id;
+        DeItemType ItemType;
+        address payable Owner;
+        string metaData;
+        AtomicLicense[] licenses;
+    }
+
+    // function to get all the atomics of a particular ItemType
+    // function getAllAtomicsByItemType1(
+    //     DeItemType _itemType
+    // ) public view returns (Atomic[] memory) {
+    //     DeItem[] memory _atomics = new DeItem[](atomics.length);
+    //     uint256 counter = 0;
+    //     for (uint256 i = 0; i < atomics.length; i++) {
+    //         if (atomics[i].ItemType == _itemType) {
+    //             _atomics[counter] = atomics[i];
+    //             counter++;
+    //         }
+    //     }
+    //     Atomic[] memory _atomicsWithLicense = new Atomic[](counter);
+    //     for (uint256 i = 0; i < counter; i++) {
+    //         _atomicsWithLicense[i].Id = _atomics[i].Id;
+    //         _atomicsWithLicense[i].ItemType = _atomics[i].ItemType;
+    //         _atomicsWithLicense[i].Owner = _atomics[i].Owner;
+    //         _atomicsWithLicense[i].metaData = _atomics[i].metaData;
+    //         _atomicsWithLicense[i].licenses = new AtomicLicense[](
+    //             _atomics[i].licenseIds.length
+    //         );
+    //         for (uint256 j = 0; j < _atomics[i].licenseIds.length; j++) {
+    //             _atomicsWithLicense[i].licenses[j].Id = licenses[
+    //                 _atomics[i].licenseIds[j]
+    //             ].Id;
+    //             _atomicsWithLicense[i].licenses[j].Owner = licenses[
+    //                 _atomics[i].licenseIds[j]
+    //             ].Owner;
+    //             _atomicsWithLicense[i].licenses[j].Price = licenses[
+    //                 _atomics[i].licenseIds[j]
+    //             ].Price;
+    //             _atomicsWithLicense[i].licenses[j].Duration = licenses[
+    //                 _atomics[i].licenseIds[j]
+    //             ].Duration;
+    //         }
+    //     }
+    //     return _atomicsWithLicense;
+    // }
+
+    function getAllAtomicsByItemType(
+        DeItemType _itemType
+    ) public view returns (DeItem[] memory) {
+        DeItem[] memory _atomics = new DeItem[](atomics.length);
+        uint256 counter = 0;
+        for (uint256 i = 0; i < atomics.length; i++) {
+            if (atomics[i].ItemType == _itemType) {
+                _atomics[counter] = atomics[i];
+                counter++;
+            }
+        }
+        return _atomics;
+    }
+
+    // getAllAtomicByType
+    // getAllCollectionsByType
+
+    function getAllCollectionsByItemType(
+        DeItemType _itemType
+    ) public view returns (DeItem[] memory) {
+        DeItem[] memory _collections = new DeItem[](collections.length);
+        uint256 counter = 0;
+        for (uint256 i = 0; i < collections.length; i++) {
+            if (collections[i].ItemType == _itemType) {
+                _collections[counter] = collections[i];
+                counter++;
+            }
+        }
+        return _collections;
     }
 
     // function to create a DeItem given the assetType , ItemType,licenseIds , metaData and store it in the user struct as well and return the DeItem Id
@@ -285,6 +374,53 @@ contract Depictorial is ReentrancyGuard {
         );
     }
 
+    //function getDeItemById (uint256 _deItemId, Type _assetType) which returns the DeItem details and the license details and the purchase details , given the DeItemId and assetType
+    function getDeItemById(
+        uint256 _deItemId,
+        Type _assetType
+    )
+        public
+        view
+        returns (
+            DeItem memory deItemDetails,
+            Licecnse[] memory licenseDetails,
+            Purchase[] memory purchaseDetails
+        )
+    {
+        if (_assetType == Type.Atomic) {
+            return (
+                atomics[_deItemId],
+                getLicenses(atomics[_deItemId].licenseIds),
+                getPurchasesByDeItemId(_deItemId, _assetType)
+            );
+        } else {
+            return (
+                collections[_deItemId],
+                getLicenses(collections[_deItemId].licenseIds),
+                getPurchasesByDeItemId(_deItemId, _assetType)
+            );
+        }
+    }
+
+    // getPurchasesByDeItemId
+    function getPurchasesByDeItemId(
+        uint256 _deItemId,
+        Type _assetType
+    ) internal view returns (Purchase[] memory) {
+        Purchase[] memory _purchases = new Purchase[](purchases.length);
+        uint256 counter = 0;
+        for (uint256 i = 0; i < purchases.length; i++) {
+            if (
+                purchases[i].DeItemId == _deItemId &&
+                purchases[i].AssetType == _assetType
+            ) {
+                _purchases[counter] = purchases[i];
+                counter++;
+            }
+        }
+        return _purchases;
+    }
+
     function getDeItems(
         uint256[] memory _deItemIds,
         Type _assetType
@@ -334,6 +470,42 @@ contract Depictorial is ReentrancyGuard {
             }
         }
         return _deItems;
+    }
+
+    // init function with 1 user of the owner and 5 licenses  and 5 atomics and 5 collections , use the functions already created to create the items
+    function init() public onlyOwner {
+        // import block.timestamp
+        uint256 timestamp = block.timestamp;
+
+        // make a array of 5 licenseIds
+        uint256[] memory licenseIds = new uint256[](5);
+        // init the array with the licenseIds
+        for (uint256 i = 0; i < 5; i++) {
+            licenseIds[i] = i + 1;
+        }
+        // create 5 licenses with incrementing price and incrementing timestamp
+
+        for (uint256 i = 0; i < 5; i++) {
+            createLicense((i + 1) * 1000000000000000000, timestamp + i);
+        }
+        // create 5 atomics
+        for (uint256 i = 0; i < 5; i++) {
+            createDeItem(
+                Type.Atomic,
+                DeItemType.Image,
+                licenseIds,
+                "https://bafkreibknu5hpvgzrkgx6zgzp4zubkwvom72f4xmeg7hpqwsanopjh6j5q.ipfs.nftstorage.link   /"
+            );
+        }
+        // create 5 collections
+        for (uint256 i = 0; i < 5; i++) {
+            createDeItem(
+                Type.Collection,
+                DeItemType.Image,
+                licenseIds,
+                "Collection 1"
+            );
+        }
     }
 
     // get all atomics in the platform
