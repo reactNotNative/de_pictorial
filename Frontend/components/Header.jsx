@@ -74,23 +74,14 @@ const Header = () => {
               Categories
             </Link>
             <Link
-              href="/"
+              href="/dashboard"
               className="text-base tracking-wide leading-relaxed text-white hover:opacity-60 transition ease-in-out duration-200"
             >
               Dashboard
             </Link>
           </div>
           <div className="w-full flex justify-end">
-            {/* <Button
-              size="md"
-              leftIcon={<AiOutlineWallet size="20" />}
-              className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
-              styles={{
-                root:{border: "none",}
-              }}
-            >
-              Connect Wallet
-            </Button> */}
+     
 
             <ConnectButton.Custom>
               {({
