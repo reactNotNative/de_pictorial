@@ -14,9 +14,9 @@ export function getContract() {
   return contract;
 }
 // function to register a new user
-export async function registerUser(name) {
+export async function registerUser() {
   let contract = getContract();
-  let tx = await contract.registerUser(name);
+  let tx = await contract.registerUser();
   let receipt = await tx.wait();
   console.log('Receipt ', receipt);
   return receipt;

@@ -35,13 +35,14 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
     if (userDetails == null) return;
     userDetails?.licenseDetails?.map((licence) => {
       console.log('LICENCE: ', licence);
-      let licenceObj = JSON.parse(licence.metadata);
+      let licenceObj = JSON.parse(licence.metaData);
       console.log('LICENCE OBJ: ', licenceObj);
       setUserLicences((userLicences) => [
         ...userLicences,
         {
-          name: licenceObj.name,
-          // price: licenceObj.price,
+          value: licence.Id.toNumber(),
+          label: licenceObj.name,
+          // price: licence.price,
         },
       ]);
     });
@@ -53,7 +54,8 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
   async function handelSubmit(e) {
     // defaultToast('Creating DeItem...');
     e.preventDefault();
-    console.log('ON SUBMIT:', formData);
+    setLoading(true);
+    // console.log('ON SUBMIT:', formData);
 
     try {
       // defaultToast('Uploading Image...');
@@ -64,9 +66,9 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
       console.log('client: ', client);
       console.log('IN TRY: ', formData.files);
       // const imageFile = new File([ someBinaryImageData ], 'nft.png', { type: 'image/png' })
-      let urls = [];
-      formData.files.map(async (file) => {
-        const metadata = await client.store({
+      // let urls = [];
+      let urls = formData.files.map((file) => {
+        return client.store({
           name: formData.title,
           description: formData.description,
           tags: formData.tags,
@@ -74,21 +76,48 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
           collection: formData.collection,
           image: file,
         });
-        urls.push(metadata.url);
-        console.log(metadata);
+
+        // urls.push(metadata.url);
+        // console.log('METADATA: ', metadata);
+        // console.log(metadata);
         // update formData with the url
-        setFormData({ ...formData, files: urls });
+        // setFormData({ ...formData, files: urls });
       });
-      deItem(formData);
+      urls = await Promise.all(urls);
+
+      console.log('URLS: ', urls[0]);
+      deItem(urls, formData);
     } catch (err) {
       // error("Error Uploading Cover Image");
       console.log(err);
     }
   }
-  function deItem(formData) {
+  async function deItem(urls, formData) {
     // defaultToast('Uploading Smart Contract...');
     console.log('IN CREATE DEITEM');
-    console.log(userDetails);
+    console.log('URLS:', urls);
+    console.log('FORMDATA:', formData);
+    let media = {
+      Photo: 0,
+      Video: 1,
+      Audio: 2,
+      Meme: 3,
+    };
+    console.log(
+      'OUPUT',
+      formData.collection ? 1 : 0,
+      media[formData.mediaType],
+      formData.licences,
+      urls[0].url
+    );
+    await createDeItem(
+      formData.collection ? 1 : 0,
+      media[formData.mediaType],
+      formData.licences,
+      urls[0].url
+    );
+    console.log('SMART CONTRACT DONE');
+    setLoading(false);
   }
   return (
     <>
@@ -106,7 +135,7 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
         size="lg"
         transition="scale"
       >
-        {/* <LoadingOverlay visible={true} /> */}
+        <LoadingOverlay visible={loading} />
         <div className="flex flex-col gap-5">
           <SegmentedControl
             value={formData.collection}
@@ -230,7 +259,7 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
               }
             />
           </div>
-
+          {/* {console.log('USRE LICENCES:', userLicences)} */}
           <MultiSelect
             disabled={false}
             placeholder="Select Licences"
