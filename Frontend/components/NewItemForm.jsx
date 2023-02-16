@@ -27,13 +27,13 @@ const NewItemForm = () => {
       onClose={() => {
         // setIsModalOpen(false);
       }}
-      opened={true}
+      opened={false}
       title="Add New Media"
       withCloseButton={true}
       closeOnClickOutside={true}
       closeOnEscape={true}
       centered
-      overflow="outside"
+      overflow="inside"
       size="lg"
       transition="scale"
     >
