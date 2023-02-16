@@ -1,25 +1,19 @@
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { useState } from 'react';
 // import openseaLogo from '../assets/opensea.png'
-import { AiOutlineSearch } from "react-icons/ai";
-import { CgProfile } from "react-icons/cg";
-import { AiOutlineWallet } from "react-icons/ai";
-import { MdOutlineAccountBalanceWallet } from "react-icons/md";
-import { ConnectButton, darkTheme } from "@rainbow-me/rainbowkit";
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
-import Logo from "../public/logo.svg";
-import { Button } from "@mantine/core";
+import { AiOutlineSearch } from 'react-icons/ai';
+import { CgProfile } from 'react-icons/cg';
+import { AiOutlineWallet } from 'react-icons/ai';
+import { MdOutlineAccountBalanceWallet } from 'react-icons/md';
+import { ConnectButton, darkTheme } from '@rainbow-me/rainbowkit';
+import { Suspense } from 'react';
+import Logo from '../public/logo.svg';
+import { Button } from '@mantine/core';
 
 const Header = () => {
-  const SocialLoginDynamic = dynamic(
-    () => import("../components/scw.jsx").then((res) => res.default),
-    {
-      ssr: false,
-    }
-  );
-
+  const [isUser, setIsUser] = useState(false);
+  useEffect(() => {}, []);
   return (
     <div className="flex flex-col">
       {/* <div className={style.wrapper}>
@@ -73,16 +67,16 @@ const Header = () => {
             >
               Categories
             </Link>
-            <Link
-              href="/dashboard"
-              className="text-base tracking-wide leading-relaxed text-white hover:opacity-60 transition ease-in-out duration-200"
-            >
-              Dashboard
-            </Link>
+            {
+              <Link
+                href="/dashboard"
+                className="text-base tracking-wide leading-relaxed text-white hover:opacity-60 transition ease-in-out duration-200"
+              >
+                Dashboard
+              </Link>
+            }
           </div>
           <div className="w-full flex justify-end">
-     
-
             <ConnectButton.Custom>
               {({
                 account,
@@ -95,22 +89,22 @@ const Header = () => {
               }) => {
                 // Note: If your app doesn't use authentication, you
                 // can remove all 'authenticationStatus' checks
-                const ready = mounted && authenticationStatus !== "loading";
+                const ready = mounted && authenticationStatus !== 'loading';
                 const connected =
                   ready &&
                   account &&
                   chain &&
                   (!authenticationStatus ||
-                    authenticationStatus === "authenticated");
+                    authenticationStatus === 'authenticated');
 
                 return (
                   <div
                     {...(!ready && {
-                      "aria-hidden": true,
+                      'aria-hidden': true,
                       style: {
                         opacity: 0,
-                        pointerEvents: "none",
-                        userSelect: "none",
+                        pointerEvents: 'none',
+                        userSelect: 'none',
                       },
                     })}
                   >
@@ -123,7 +117,7 @@ const Header = () => {
                             leftIcon={<AiOutlineWallet size="20" />}
                             className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
                             styles={{
-                              root: { border: "none" },
+                              root: { border: 'none' },
                             }}
                           >
                             Connect Wallet
@@ -139,7 +133,7 @@ const Header = () => {
                             leftIcon={<AiOutlineWallet size="20" />}
                             className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
                             styles={{
-                              root: { border: "none" },
+                              root: { border: 'none' },
                             }}
                           >
                             Wrong network
@@ -148,10 +142,10 @@ const Header = () => {
                       }
 
                       return (
-                        <div style={{ display: "flex", gap: 12 }}>
+                        <div style={{ display: 'flex', gap: 12 }}>
                           <button
                             onClick={openChainModal}
-                            style={{ display: "flex", alignItems: "center" }}
+                            style={{ display: 'flex', alignItems: 'center' }}
                             type="button"
                           >
                             {chain.hasIcon && (
@@ -161,13 +155,13 @@ const Header = () => {
                                   width: 12,
                                   height: 12,
                                   borderRadius: 999,
-                                  overflow: "hidden",
+                                  overflow: 'hidden',
                                   marginRight: 4,
                                 }}
                               >
                                 {chain.iconUrl && (
                                   <img
-                                    alt={chain.name ?? "Chain icon"}
+                                    alt={chain.name ?? 'Chain icon'}
                                     src={chain.iconUrl}
                                     style={{ width: 12, height: 12 }}
                                   />
@@ -182,7 +176,7 @@ const Header = () => {
                             leftIcon={<AiOutlineWallet size="20" />}
                             className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
                             styles={{
-                              root: { border: "none" },
+                              root: { border: 'none' },
                             }}
                           >
                             {account.displayName}

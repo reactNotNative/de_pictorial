@@ -8,13 +8,17 @@ import {
   TextInput,
   Textarea,
   useMantineTheme,
+  Button,
 } from '@mantine/core';
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NFTStorage } from 'nft.storage';
 import { ToastContainer } from 'react-toastify';
+import { isModalOpenAtom, userDataAtom } from '../store/global';
+import { useAtom } from 'jotai';
+const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
+  const [userDetails, setUserDetails] = useAtom(userDataAtom);
 
-const NewItemForm = ({ setIsModalOpen }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -24,6 +28,25 @@ const NewItemForm = ({ setIsModalOpen }) => {
     licences: [],
     files: null,
   });
+  const [loading, setLoading] = useState(false);
+  const [userLicences, setUserLicences] = useState([]);
+  useEffect(() => {
+    console.log('LICENCES: ', userDetails);
+    if (userDetails == null) return;
+    userDetails?.licenseDetails?.map((licence) => {
+      console.log('LICENCE: ', licence);
+      let licenceObj = JSON.parse(licence.metadata);
+      console.log('LICENCE OBJ: ', licenceObj);
+      setUserLicences((userLicences) => [
+        ...userLicences,
+        {
+          name: licenceObj.name,
+          // price: licenceObj.price,
+        },
+      ]);
+    });
+    // setUserLicences();
+  }, [userDetails]);
 
   console.log(formData);
   const theme = useMantineTheme();
@@ -31,14 +54,7 @@ const NewItemForm = ({ setIsModalOpen }) => {
     // defaultToast('Creating DeItem...');
     e.preventDefault();
     console.log('ON SUBMIT:', formData);
-    // const sendData = new FormData();
-    // sendData.append('title', formData.title);
-    // sendData.append('description', formData.description);
-    // sendData.append('mediaType', formData.mediaType);
-    // sendData.append('collection', formData.collection);
-    // sendData.append('tags', formData.tags);
-    // sendData.append('files', formData.files);
-    // console.log('SEND DATA: ', sendData);
+
     try {
       // defaultToast('Uploading Image...');
 
@@ -63,24 +79,24 @@ const NewItemForm = ({ setIsModalOpen }) => {
         // update formData with the url
         setFormData({ ...formData, files: urls });
       });
-      // saveFeed(metadata.url);
+      deItem(formData);
     } catch (err) {
       // error("Error Uploading Cover Image");
       console.log(err);
     }
   }
-
+  function deItem(formData) {
+    // defaultToast('Uploading Smart Contract...');
+    console.log('IN CREATE DEITEM');
+    console.log(userDetails);
+  }
   return (
     <>
       <Modal
         onClose={() => {
           setIsModalOpen(false);
         }}
-        // onDrop={(files) => {
-        //   console.log('accepted files', files);
-        //   setFormData({ ...formData, files: files });
-        // }}
-        opened={true}
+        opened={isItemModalOpen}
         title="Add New Media"
         withCloseButton={true}
         closeOnClickOutside={true}
@@ -220,24 +236,7 @@ const NewItemForm = ({ setIsModalOpen }) => {
             placeholder="Select Licences"
             label="Licences"
             value={formData.licences}
-            data={[
-              {
-                value: '0',
-                label: 'Free Licence',
-              },
-              {
-                value: '1',
-                label: 'Standard Licence',
-              },
-              {
-                value: '2',
-                label: 'Premium Licence',
-              },
-              {
-                value: '3',
-                label: 'Exclusive Licence',
-              },
-            ]}
+            data={userLicences}
             onChange={(val) => setFormData({ ...formData, licences: val })}
             clearable
             searchable
@@ -254,7 +253,7 @@ const NewItemForm = ({ setIsModalOpen }) => {
               setFormData({ ...formData, description: event.target.value })
             }
           />
-          <button onClick={handelSubmit}>SUBMIT</button>
+          <Button onClick={handelSubmit}>SUBMIT</Button>
         </div>
       </Modal>
       <ToastContainer

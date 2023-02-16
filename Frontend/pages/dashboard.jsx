@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createStyles, Avatar, Text, Group } from '@mantine/core';
 import { AiFillPhone, AiAt } from 'react-icons/ai';
 import NewItemForm from '../components/NewItemForm';
+import LicenceForm from '../components/LicenceForm';
 import Draggable from '../components/Draggable';
 import DisplayCard from './../components/DisplayCard';
 
@@ -22,10 +23,10 @@ const dashboard = () => {
   const [vantaEffect, setVantaEffect] = useState(null);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const [isLicenceModalOpen, setIsLicenceModalOpen] = useState(false);
-  const [userData, setUserData] = useAtom(userDataAtom);
+  // const [userData, setUserData] = useAtom(userDataAtom);
 
   const [userRegistered, setUserRegistered] = useState(false);
-  const [userDetails, setUserDetails] = useState(null);
+  const [userDetails, setUserDetails] = useAtom(userDataAtom);
   const data = {
     avatar:
       'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80',
@@ -52,15 +53,17 @@ const dashboard = () => {
     isUserRegistered().then((res) => {
       setUserRegistered(() => res);
       if (res) {
+        console.log('in if');
         getUserDetails().then((res) => {
-          // console.log("res: ", res);
-          setUserDetails(() => res);
+          console.log('res: ', res);
+          setUserDetails(res);
         });
       } else {
-        // registerUser();
+        registerUser();
       }
     });
   }, []);
+  // console.log('userDetails: ', userDetails);
   useEffect(() => {
     if (!vantaEffect) {
       setVantaEffect(
@@ -126,6 +129,11 @@ const dashboard = () => {
           </div>
         </div>
         <button onClick={() => setIsItemModalOpen(true)}>Upload DeItem</button>
+        <button onClick={() => {}}>Register User</button>
+        <button onClick={() => setIsLicenceModalOpen(true)}>
+          Create Licence{' '}
+        </button>
+        <button onClick={() => setIsItemModalOpen(true)}>Upload DeItem</button>
       </section>
       <div className="flex w-full gap-10 overflow-x-auto">
         <Draggable className={classes.draggable}>
@@ -138,7 +146,20 @@ const dashboard = () => {
           </>
         </Draggable>
       </div>
-      {isItemModalOpen && <NewItemForm setIsModalOpen={setIsItemModalOpen} />}
+
+      <NewItemForm
+        isItemModalOpen={isItemModalOpen}
+        setIsModalOpen={setIsItemModalOpen}
+        createDeItem={createDeItem}
+        // userDetails={userDetails}
+      />
+
+      <LicenceForm
+        isLicenceModalOpen={isLicenceModalOpen}
+        setIsLicenceModalOpen={setIsLicenceModalOpen}
+        createLicence={createLicence}
+        userDetails={userDetails}
+      />
     </div>
   );
 };
