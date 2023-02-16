@@ -2,9 +2,9 @@ import { ethers } from "ethers";
 import { obj } from "../constants/contract";
 export function getContract() {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
-  // console.log("Provide Found");
-  // console.log("Contract Address", obj.contractAddress);
-  // console.log("Contract ABI", obj.contractABI);
+  console.log("Provide Found");
+  console.log("Contract Address", obj.contractAddress);
+  console.log("Contract ABI", obj.contractABI);
   const signer = provider.getSigner();
   let contract = new ethers.Contract(
     obj.contractAddress, // Our contract adress
@@ -24,9 +24,10 @@ export async function registerUser(name) {
 //check if user is registered
 export async function isUserRegistered() {
   let contract = getContract();
-  let isRegistered = await contract.isUserRegistered(
-    window.ethereum.selectedAddress
-  );
+  let isRegistered = await contract
+    .isUserRegistered
+    // window.ethereum.selectedAddress
+    ();
   console.log("Is Registered ", isRegistered);
   return isRegistered;
 }

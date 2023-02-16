@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
 
-export const userData = atom({
-  name: 'John Doe',
-});
+export const userDataAtom = atom(null);
+
+export const isModalOpenAtom = atom(false);

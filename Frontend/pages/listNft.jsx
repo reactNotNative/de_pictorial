@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 // import { create } from "ipfs-http-client";
 import { BiCloud, BiPlus } from "react-icons/bi";
-import getContract from "../utilities/getContract.js";
+import getContract from "../utilities/contractfunctions.js";
 import { ToastContainer } from "react-toastify";
 require("dotenv").config();
 // import { success, error, defaultToast } from "./utilities/response";

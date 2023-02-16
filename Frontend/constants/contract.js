@@ -1,7 +1,7 @@
-import abi from "./Depictorial.json";
+import abi from './Depictorial.json';
 export let obj = {
   // Contract address
-  contractAddress: "0xC28Dc38F13a6cD4c23940a9aDF2b4A52E8B36Ba2",
+  contractAddress: '0x5ec799f3ADb42BB79a9583dd81B77d8f05e560B6',
   // Contract ABI
   contractABI: abi.abi,
 };
