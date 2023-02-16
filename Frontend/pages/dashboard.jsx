@@ -3,7 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createStyles, Avatar, Text, Group } from '@mantine/core';
 import { AiFillPhone, AiAt } from 'react-icons/ai';
 import NewItemForm from '../components/NewItemForm';
-import { NFTStorage } from 'nft.storage';
+import Draggable from '../components/Draggable';
+import DisplayCard from './../components/DisplayCard';
 
 import {
   getContract,
@@ -33,6 +34,18 @@ const dashboard = () => {
     email: 'robert@glassbreaker.io',
     phone: '+11 (876) 890 56 23',
   };
+  const useStyles = createStyles((theme) => ({
+    draggable: {
+      display: 'flex',
+      marginBottom: '16px',
+      overflowX: 'auto',
+      gap: '20px',
+      width: '100%',
+      cursor: 'pointer',
+      padding: '8px 0',
+    },
+  }));
+  const { classes } = useStyles();
 
   useEffect(() => {
     getContract();
@@ -114,7 +127,17 @@ const dashboard = () => {
         </div>
         <button onClick={() => setIsItemModalOpen(true)}>Upload DeItem</button>
       </section>
-
+      <div className="flex w-full gap-10 overflow-x-auto">
+        <Draggable className={classes.draggable}>
+          <>
+            {[...Array(10)].map(() => (
+              <div className={classes.card}>
+                <DisplayCard />
+              </div>
+            ))}
+          </>
+        </Draggable>
+      </div>
       {isItemModalOpen && <NewItemForm setIsModalOpen={setIsItemModalOpen} />}
     </div>
   );
