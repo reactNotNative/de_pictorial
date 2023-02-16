@@ -3,11 +3,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { createStyles, Avatar, Text, Group } from "@mantine/core";
 import { AiFillPhone, AiAt } from "react-icons/ai";
 import NewItemForm from "../components/NewItemForm";
+import LicenceForm from "../components/LicenceForm";
 import Draggable from "../components/Draggable";
 import DisplayCard from "./../components/DisplayCard";
 import { Button } from "@mantine/core";
-import { AiOutlineWallet } from "react-icons/ai";
-
 import {
   getContract,
   getAllLicences,
@@ -24,18 +23,11 @@ const dashboard = () => {
   const [vantaEffect, setVantaEffect] = useState(null);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const [isLicenceModalOpen, setIsLicenceModalOpen] = useState(false);
-  const [userData, setUserData] = useAtom(userDataAtom);
+  // const [userData, setUserData] = useAtom(userDataAtom);
 
   const [userRegistered, setUserRegistered] = useState(false);
-  const [userDetails, setUserDetails] = useState(null);
-  const data = {
-    avatar:
-      "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
-    title: "Software engineer",
-    name: "Robert Glassbreaker",
-    email: "robert@glassbreaker.io",
-    phone: "+11 (876) 890 56 23",
-  };
+  const [userDetails, setUserDetails] = useAtom(userDataAtom);
+
   const useStyles = createStyles((theme) => ({
     draggable: {
       display: "flex",
@@ -54,15 +46,17 @@ const dashboard = () => {
     isUserRegistered().then((res) => {
       setUserRegistered(() => res);
       if (res) {
+        console.log("in if");
         getUserDetails().then((res) => {
-          // console.log("res: ", res);
-          setUserDetails(() => res);
+          console.log("res: ", res);
+          setUserDetails(res);
         });
       } else {
         // registerUser();
       }
     });
   }, []);
+  // console.log('userDetails: ', userDetails);
   useEffect(() => {
     if (!vantaEffect) {
       setVantaEffect(
@@ -102,16 +96,16 @@ const dashboard = () => {
               />
               <div className="flex flex-col h-full">
                 <Text
-                  size="lg"
+                  size="xs"
                   sx={{ textTransform: "uppercase" }}
                   weight={700}
                   color="dimmed"
                 >
-                  {data.title}
+                  Username
                 </Text>
 
                 <Text size="xl" weight={500}>
-                  {data.name}
+                  Wallet Address{" "}
                 </Text>
               </div>
             </Group>
@@ -124,7 +118,6 @@ const dashboard = () => {
           <Button
             onClick={() => setIsItemModalOpen(true)}
             size="md"
-            leftIcon={<AiOutlineWallet size="20" />}
             className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
             styles={{
               root: { border: "none" },
@@ -136,32 +129,46 @@ const dashboard = () => {
         <div className="flex w-full gap-10 overflow-x-auto">
           <Draggable className={classes.draggable}>
             <>
-              {[...Array(10)].map(() => (
+              {[...Array(10)].map((image) => (
                 <div className={classes.card}>
-                  <DisplayCard />
+                  <DisplayCard image={image} />
                 </div>
               ))}
             </>
           </Draggable>
         </div>
       </section>
-      <section className="container w-[95%] backdrop-blur-md bg-opacity-10 rounded-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
-        <div className="inline-flex items-end justify-start space-x-5">
-          <p className="text-4xl font-bold leading-10">Bought Items</p>
+      <section className="container w-[95%] backdrop-blur-md bg-opacity-10 rounded-t-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
+        <div className="inline-flex items-end justify-between w-full space-x-5">
+          <p className="text-4xl font-bold leading-10">Purchased Licenses</p>
+          
         </div>
         <div className="flex w-full gap-10 overflow-x-auto">
           <Draggable className={classes.draggable}>
             <>
-              {[...Array(10)].map(() => (
+              {[...Array(10)].map((image) => (
                 <div className={classes.card}>
-                  <DisplayCard />
+                  <DisplayCard image={image} />
                 </div>
               ))}
             </>
           </Draggable>
         </div>
       </section>
-      {isItemModalOpen && <NewItemForm setIsModalOpen={setIsItemModalOpen} />}
+
+      <NewItemForm
+        isItemModalOpen={isItemModalOpen}
+        setIsModalOpen={setIsItemModalOpen}
+        createDeItem={createDeItem}
+        // userDetails={userDetails}
+      />
+
+      <LicenceForm
+        isLicenceModalOpen={isLicenceModalOpen}
+        setIsLicenceModalOpen={setIsLicenceModalOpen}
+        createLicence={createLicence}
+        userDetails={userDetails}
+      />
     </div>
   );
 };

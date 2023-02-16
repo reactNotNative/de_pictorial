@@ -516,7 +516,7 @@ contract Depictorial is ReentrancyGuard {
             createLicense(
                 (i + 1) * 1000000000000000000,
                 timestamp + i,
-                "License 1"
+                '{"name":"1","description":"qweqweqweqweqwe","licenceType":"Paid"}'
             );
         }
         // create 5 atomics

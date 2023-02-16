@@ -14,7 +14,7 @@ import Draggable from "../components/Draggable";
 import { useAtom } from "jotai";
 import { userDataAtom } from "../store/global";
 import NewItemForm from "../components/NewItemForm";
-
+import thumbnail from "../constants/images";
 const useStyles = createStyles((theme) => ({
   draggable: {
     display: "flex",
@@ -123,9 +123,9 @@ const Home = () => {
           <div className="flex w-full gap-10 overflow-x-auto">
             <Draggable className={classes.draggable}>
               <>
-                {[...Array(10)].map(() => (
+                {thumbnail.map((image) => (
                   <div className={classes.card}>
-                    <DisplayCard />
+                    <DisplayCard image={image} />
                   </div>
                 ))}
               </>
@@ -142,9 +142,9 @@ const Home = () => {
           <div className="flex w-full gap-10 overflow-x-auto">
             <Draggable className={classes.draggable}>
               <>
-                {[...Array(10)].map(() => (
+                {thumbnail.map((image) => (
                   <div className={classes.card}>
-                    <DisplayCard />
+                    <DisplayCard image={image} />
                   </div>
                 ))}
               </>

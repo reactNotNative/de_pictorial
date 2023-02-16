@@ -1,4 +1,5 @@
 import {
+  Button,
   Modal,
   NumberInput,
   Radio,
@@ -6,22 +7,66 @@ import {
   Switch,
   TextInput,
   Textarea,
+  LoadingOverlay,
 } from '@mantine/core';
 import React, { useState } from 'react';
+import { NFTStorage } from 'nft.storage';
 
-const LicenceForm = () => {
+const LicenceForm = ({
+  isLicenceModalOpen,
+  setIsLicenceModalOpen,
+  createLicence,
+  userDetails,
+}) => {
   const [formData, setFormData] = useState({
     title: null,
     duration: 12,
     description: null,
+    price: 0,
     licenceType: 'Paid',
   });
+  console.log(formData);
+  const [loading, setLoading] = useState(false);
+  async function handelSubmit(e) {
+    if (formData.licenceType === 'Free') {
+      formData.price = 0;
+    }
+    e.preventDefault();
+    setLoading(true);
+    try {
+      // defaultToast('Uploading Image...');
+
+      const client = new NFTStorage({
+        token: process.env.NEXT_PUBLIC_NFT_STORAGE,
+      });
+
+      const metadata = JSON.stringify({
+        name: formData.title,
+        description: formData.description,
+        licenceType: formData.licenceType,
+        duration: formData.duration,
+      });
+
+      deLicence(metadata, formData);
+    } catch (err) {
+      // error("Error Uploading Cover Image");
+      console.log(err);
+    }
+
+    console.log('formData: ', formData);
+  }
+
+  async function deLicence(metadata, formData) {
+    await createLicence(formData.price, formData.duration, metadata);
+    setLoading(false);
+    setIsLicenceModalOpen(false);
+  }
   return (
     <Modal
       onClose={() => {
-        // setIsModalOpen(false);
+        setIsLicenceModalOpen(false);
       }}
-      opened={false}
+      opened={isLicenceModalOpen}
       title="Add Licence"
       withCloseButton={true}
       closeOnClickOutside={true}
@@ -31,7 +76,8 @@ const LicenceForm = () => {
       size="lg"
       transition="scale"
     >
-      {/* <LoadingOverlay visible={true} /> */}
+      <LoadingOverlay visible={loading} />
+
       <div className="flex flex-col gap-5">
         <TextInput
           styles={{
@@ -142,6 +188,7 @@ const LicenceForm = () => {
             setFormData({ ...formData, description: e.target.value })
           }
         />
+        <Button onClick={handelSubmit}>SUBMIT</Button>
       </div>
     </Modal>
   );
