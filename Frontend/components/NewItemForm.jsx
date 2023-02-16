@@ -12,22 +12,41 @@ import {
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import React, { useState } from 'react';
 
-const NewItemForm = () => {
+const NewItemForm = ({ setIsModalOpen }) => {
   const [formData, setFormData] = useState({
+    title: '',
+    description: '',
     collection: false,
+    mediaType: '',
     tags: [],
+    licences: [],
     files: null,
   });
 
   console.log(formData);
   const theme = useMantineTheme();
-
+  function handelSubmit(e) {
+    e.preventDefault();
+    console.log('ON SUBMIT:', formData);
+    // const sendData = new FormData();
+    // sendData.append('title', formData.title);
+    // sendData.append('description', formData.description);
+    // sendData.append('mediaType', formData.mediaType);
+    // sendData.append('collection', formData.collection);
+    // sendData.append('tags', formData.tags);
+    // sendData.append('files', formData.files);
+    // console.log('SEND DATA: ', sendData);
+  }
   return (
     <Modal
       onClose={() => {
-        // setIsModalOpen(false);
+        setIsModalOpen(false);
       }}
-      opened={false}
+      // onDrop={(files) => {
+      //   console.log('accepted files', files);
+      //   setFormData({ ...formData, files: files });
+      // }}
+      opened={true}
       title="Add New Media"
       withCloseButton={true}
       closeOnClickOutside={true}
@@ -61,7 +80,10 @@ const NewItemForm = () => {
           File Upload
         </div>
         <Dropzone
-          onDrop={(files) => console.log('accepted files', files)}
+          onDrop={(files) => {
+            console.log('accepted files', files);
+            setFormData({ ...formData, files: files });
+          }}
           onReject={(files) => console.log('rejected files', files)}
           maxFiles={formData.collection ? 5 : 1}
           multiple={formData.collection}
@@ -123,6 +145,7 @@ const NewItemForm = () => {
               { value: 'Meme', label: 'Meme' },
               { value: 'Audio', label: 'Audio' },
             ]}
+            onChange={(val) => setFormData({ ...formData, mediaType: val })}
           />
           <MultiSelect
             label="Tags"
@@ -195,6 +218,7 @@ const NewItemForm = () => {
             setFormData({ ...formData, description: event.target.value })
           }
         />
+        <button onClick={handelSubmit}>SUBMIT</button>
       </div>
     </Modal>
   );

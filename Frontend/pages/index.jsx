@@ -12,7 +12,7 @@ import {
 } from '@mantine/core';
 import Draggable from '../components/Draggable';
 import { useAtom } from 'jotai';
-import { userData } from '../store/global';
+import { userDataAtom } from '../store/global';
 import NewItemForm from '../components/NewItemForm';
 
 const useStyles = createStyles((theme) => ({
@@ -30,7 +30,7 @@ const useStyles = createStyles((theme) => ({
 const Home = () => {
   const [vantaEffect, setVantaEffect] = useState(null);
   const { classes } = useStyles();
-  const [user, setUser] = useAtom(userData);
+  const [user, setUser] = useAtom(userDataAtom);
   const theme = useMantineTheme();
 
   console.log(user);
@@ -132,7 +132,7 @@ const Home = () => {
             </Draggable>
           </div>
         </section>
-        <NewItemForm />
+        {/* <NewItemForm /> */}
       </div>
     </>
   );

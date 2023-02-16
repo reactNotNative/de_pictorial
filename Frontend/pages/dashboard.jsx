@@ -1,19 +1,53 @@
-import FOG from "vanta/dist/vanta.fog.min.js";
-import React, { useState, useEffect, useRef } from "react";
-import { createStyles, Avatar, Text, Group } from "@mantine/core";
-import { AiFillPhone, AiAt } from "react-icons/ai";
+import FOG from 'vanta/dist/vanta.fog.min.js';
+import React, { useState, useEffect, useRef } from 'react';
+import { createStyles, Avatar, Text, Group } from '@mantine/core';
+import { AiFillPhone, AiAt } from 'react-icons/ai';
+import NewItemForm from '../components/NewItemForm';
+import { NFTStorage } from 'nft.storage';
 
+import {
+  getContract,
+  getAllLicences,
+  getUserDetails,
+  isUserRegistered,
+  registerUser,
+  createLicence,
+  createDeItem,
+} from '../utilities/contractfunctions';
+import { isModalOpenAtom, userDataAtom } from '../store/global';
+import { useAtom } from 'jotai';
 const dashboard = () => {
   const myRef = useRef(null);
   const [vantaEffect, setVantaEffect] = useState(null);
+  const [isItemModalOpen, setIsItemModalOpen] = useState(false);
+  const [isLicenceModalOpen, setIsLicenceModalOpen] = useState(false);
+  const [userData, setUserData] = useAtom(userDataAtom);
+
+  const [userRegistered, setUserRegistered] = useState(false);
+  const [userDetails, setUserDetails] = useState(null);
   const data = {
     avatar:
-      "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80",
-    title: "Software engineer",
-    name: "Robert Glassbreaker",
-    email: "robert@glassbreaker.io",
-    phone: "+11 (876) 890 56 23",
+      'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80',
+    title: 'Software engineer',
+    name: 'Robert Glassbreaker',
+    email: 'robert@glassbreaker.io',
+    phone: '+11 (876) 890 56 23',
   };
+
+  useEffect(() => {
+    getContract();
+    isUserRegistered().then((res) => {
+      setUserRegistered(() => res);
+      if (res) {
+        getUserDetails().then((res) => {
+          // console.log("res: ", res);
+          setUserDetails(() => res);
+        });
+      } else {
+        // registerUser();
+      }
+    });
+  }, []);
   useEffect(() => {
     if (!vantaEffect) {
       setVantaEffect(
@@ -32,6 +66,7 @@ const dashboard = () => {
         })
       );
     }
+
     return () => {
       if (vantaEffect) vantaEffect.destroy();
     };
@@ -49,7 +84,7 @@ const dashboard = () => {
               <div>
                 <Text
                   size="xs"
-                  sx={{ textTransform: "uppercase" }}
+                  sx={{ textTransform: 'uppercase' }}
                   weight={700}
                   color="dimmed"
                 >
@@ -77,7 +112,10 @@ const dashboard = () => {
             </Group>
           </div>
         </div>
+        <button onClick={() => setIsItemModalOpen(true)}>Upload DeItem</button>
       </section>
+
+      {isItemModalOpen && <NewItemForm setIsModalOpen={setIsItemModalOpen} />}
     </div>
   );
 };

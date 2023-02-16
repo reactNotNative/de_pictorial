@@ -21,7 +21,7 @@ contract Depictorial is ReentrancyGuard {
         Collection
     }
     enum DeItemType {
-        Image,
+        Photo,
         Video,
         Audio,
         Meme
@@ -39,7 +39,16 @@ contract Depictorial is ReentrancyGuard {
         address payable Owner;
         uint256 Price;
         uint Duration;
+        string metaData;
+        // {
+        // name
+        // description
+        // Creation time
+        // Expiration time
+        // Conditions
+        // }
     }
+
     struct Purchase {
         uint256 Id;
         address payable Buyer;
@@ -54,6 +63,14 @@ contract Depictorial is ReentrancyGuard {
         address payable Owner;
         uint256[] licenseIds;
         string metaData;
+        // {
+        //     Title
+        //     description
+        //     Creation time
+        //     Expiration time
+        //    url:[]
+        //     tags:[]
+        // }
     }
 
     mapping(address => User) public users;
@@ -68,7 +85,7 @@ contract Depictorial is ReentrancyGuard {
             DeItem({
                 Id: 0,
                 AssetType: Type.Collection,
-                ItemType: DeItemType.Image,
+                ItemType: DeItemType.Photo,
                 Owner: payable(address(0)),
                 licenseIds: new uint256[](0),
                 metaData: "Default Collection"
@@ -78,14 +95,20 @@ contract Depictorial is ReentrancyGuard {
             DeItem({
                 Id: 0,
                 AssetType: Type.Atomic,
-                ItemType: DeItemType.Image,
+                ItemType: DeItemType.Photo,
                 Owner: payable(address(0)),
                 licenseIds: new uint256[](0),
                 metaData: "Default Atomic"
             })
         );
         licenses.push(
-            Licecnse({Id: 0, Owner: payable(address(0)), Price: 0, Duration: 0})
+            Licecnse({
+                Id: 0,
+                Owner: payable(address(0)),
+                Price: 0,
+                Duration: 0,
+                metaData: "Default License"
+            })
         );
         purchases.push(
             Purchase({
@@ -154,7 +177,8 @@ contract Depictorial is ReentrancyGuard {
     // function to create a license, return the license Id
     function createLicense(
         uint256 _price,
-        uint256 _duration
+        uint256 _duration,
+        string memory _metaData
     ) public isRegistered returns (uint256) {
         _LicenseIds.increment();
         uint256 newLicenseId = _LicenseIds.current();
@@ -163,7 +187,8 @@ contract Depictorial is ReentrancyGuard {
                 Id: newLicenseId,
                 Owner: payable(msg.sender),
                 Price: _price,
-                Duration: _duration
+                Duration: _duration,
+                metaData: _metaData
             })
         );
         users[msg.sender].licenseIds.push(newLicenseId);
@@ -349,6 +374,8 @@ contract Depictorial is ReentrancyGuard {
                 AssetType: _assetType
             })
         );
+        // Also create a ERC721 token for the purchase and transfer it to the buyer address and store the token id in the purchase struct as well
+        // create a ERC721Token
         users[msg.sender].purchaseIds.push(newPurchaseId);
         return newPurchaseId;
     }
@@ -486,13 +513,17 @@ contract Depictorial is ReentrancyGuard {
         // create 5 licenses with incrementing price and incrementing timestamp
 
         for (uint256 i = 0; i < 5; i++) {
-            createLicense((i + 1) * 1000000000000000000, timestamp + i);
+            createLicense(
+                (i + 1) * 1000000000000000000,
+                timestamp + i,
+                "License 1"
+            );
         }
         // create 5 atomics
         for (uint256 i = 0; i < 5; i++) {
             createDeItem(
                 Type.Atomic,
-                DeItemType.Image,
+                DeItemType.Photo,
                 licenseIds,
                 "https://bafkreibknu5hpvgzrkgx6zgzp4zubkwvom72f4xmeg7hpqwsanopjh6j5q.ipfs.nftstorage.link   /"
             );
@@ -501,7 +532,7 @@ contract Depictorial is ReentrancyGuard {
         for (uint256 i = 0; i < 5; i++) {
             createDeItem(
                 Type.Collection,
-                DeItemType.Image,
+                DeItemType.Photo,
                 licenseIds,
                 "Collection 1"
             );
