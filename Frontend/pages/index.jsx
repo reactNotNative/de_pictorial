@@ -1,29 +1,29 @@
-import Typewriter from 'typewriter-effect';
-import { AiOutlineSearch, AiOutlineArrowRight } from 'react-icons/ai';
-import React, { useState, useEffect, useRef } from 'react';
-import FOG from 'vanta/dist/vanta.fog.min.js';
-import DisplayCard from './../components/DisplayCard';
+import Typewriter from "typewriter-effect";
+import { AiOutlineSearch, AiOutlineArrowRight } from "react-icons/ai";
+import React, { useState, useEffect, useRef } from "react";
+import FOG from "vanta/dist/vanta.fog.min.js";
+import DisplayCard from "./../components/DisplayCard";
 import {
   TextInput,
   ActionIcon,
   useMantineTheme,
   createStyles,
   Button,
-} from '@mantine/core';
-import Draggable from '../components/Draggable';
-import { useAtom } from 'jotai';
-import { userDataAtom } from '../store/global';
-import NewItemForm from '../components/NewItemForm';
-import thumbnail from '../constants/images';
+} from "@mantine/core";
+import Draggable from "../components/Draggable";
+import { useAtom } from "jotai";
+import { userDataAtom } from "../store/global";
+import NewItemForm from "../components/NewItemForm";
+import thumbnail from "../constants/images";
 const useStyles = createStyles((theme) => ({
   draggable: {
-    display: 'flex',
-    marginBottom: '16px',
-    overflowX: 'auto',
-    gap: '20px',
-    width: '100%',
-    cursor: 'pointer',
-    padding: '8px 0',
+    display: "flex",
+    marginBottom: "16px",
+    overflowX: "auto",
+    gap: "20px",
+    width: "100%",
+    cursor: "pointer",
+    padding: "8px 0",
   },
 }));
 
@@ -71,7 +71,7 @@ const Home = () => {
               <span className="font-semibold">Decentralizing </span>
               <Typewriter
                 options={{
-                  strings: ['Ownership', 'Media', 'Licences'],
+                  strings: ["Ownership", "Media", "Licences"],
                   deleteSpeed: 40,
                   autoStart: true,
                   loop: true,
@@ -92,10 +92,10 @@ const Home = () => {
             className="w-1/2"
             styles={{
               input: {
-                '&:hover': { borderColor: 'white' },
-                '&:focus': { borderColor: 'white' },
-                background: 'none',
-                borderWidth: '2px',
+                "&:hover": { borderColor: "white" },
+                "&:focus": { borderColor: "white" },
+                background: "none",
+                borderWidth: "2px",
               },
             }}
             rightSection={
@@ -103,7 +103,7 @@ const Home = () => {
                 size="md"
                 className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
                 styles={{
-                  root: { border: 'none', padding: '2px 6px' },
+                  root: { border: "none", padding: "2px 6px" },
                 }}
               >
                 <AiOutlineArrowRight size="2rem" />
@@ -113,7 +113,26 @@ const Home = () => {
             placeholder="Search by item, author, category"
           />
         </section>
-        <section className="container w-[95%] backdrop-blur-md bg-opacity-10 rounded-t-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
+        <section className="container w-[95%] backdrop-blur-md bg-opacity-10 rounded-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
+          <div className="inline-flex items-end justify-start space-x-5">
+            <p className="text-4xl font-bold leading-10">Featured</p>
+            <p className="text-base font-bold leading-tight text-gray-400">
+              See all
+            </p>
+          </div>
+          <div className="flex w-full gap-10 overflow-x-auto">
+            <Draggable className={classes.draggable}>
+              <>
+                {thumbnail.map((image) => (
+                  <div className={classes.card}>
+                    <DisplayCard image={image} />
+                  </div>
+                ))}
+              </>
+            </Draggable>
+          </div>
+        </section>
+        <section className="container w-[95%] backdrop-blur-md mt-20 bg-opacity-10 rounded-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
           <div className="inline-flex items-end justify-start space-x-5">
             <p className="text-4xl font-bold leading-10">Featured</p>
             <p className="text-base font-bold leading-tight text-gray-400">

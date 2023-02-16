@@ -140,11 +140,13 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
           <SegmentedControl
             value={formData.collection}
             styles={{
-              controlActive: {
+              active: {
                 background:
                   'linear-gradient(to right, rgb(251, 113, 133), rgb(217, 70, 239), rgb(99, 102, 241))',
               },
             }}
+            transitionDuration={500}
+            transitionTimingFunction="linear"
             onChange={(val) => setFormData({ ...formData, collection: val })}
             data={[
               { label: 'Single', value: false },

@@ -1,12 +1,12 @@
-import FOG from 'vanta/dist/vanta.fog.min.js';
-import React, { useState, useEffect, useRef } from 'react';
-import { createStyles, Avatar, Text, Group } from '@mantine/core';
-import { AiFillPhone, AiAt } from 'react-icons/ai';
-import NewItemForm from '../components/NewItemForm';
-import LicenceForm from '../components/LicenceForm';
-import Draggable from '../components/Draggable';
-import DisplayCard from './../components/DisplayCard';
-
+import FOG from "vanta/dist/vanta.fog.min.js";
+import React, { useState, useEffect, useRef } from "react";
+import { createStyles, Avatar, Text, Group } from "@mantine/core";
+import { AiFillPhone, AiAt } from "react-icons/ai";
+import NewItemForm from "../components/NewItemForm";
+import LicenceForm from "../components/LicenceForm";
+import Draggable from "../components/Draggable";
+import DisplayCard from "./../components/DisplayCard";
+import { Button } from "@mantine/core";
 import {
   getContract,
   getAllLicences,
@@ -15,9 +15,9 @@ import {
   registerUser,
   createLicence,
   createDeItem,
-} from '../utilities/contractfunctions';
-import { isModalOpenAtom, userDataAtom } from '../store/global';
-import { useAtom } from 'jotai';
+} from "../utilities/contractfunctions";
+import { isModalOpenAtom, userDataAtom } from "../store/global";
+import { useAtom } from "jotai";
 const dashboard = () => {
   const myRef = useRef(null);
   const [vantaEffect, setVantaEffect] = useState(null);
@@ -27,23 +27,16 @@ const dashboard = () => {
 
   const [userRegistered, setUserRegistered] = useState(false);
   const [userDetails, setUserDetails] = useAtom(userDataAtom);
-  const data = {
-    avatar:
-      'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80',
-    title: 'Software engineer',
-    name: 'Robert Glassbreaker',
-    email: 'robert@glassbreaker.io',
-    phone: '+11 (876) 890 56 23',
-  };
+
   const useStyles = createStyles((theme) => ({
     draggable: {
-      display: 'flex',
-      marginBottom: '16px',
-      overflowX: 'auto',
-      gap: '20px',
-      width: '100%',
-      cursor: 'pointer',
-      padding: '8px 0',
+      display: "flex",
+      marginBottom: "16px",
+      overflowX: "auto",
+      gap: "20px",
+      width: "100%",
+      cursor: "pointer",
+      padding: "8px 0",
     },
   }));
   const { classes } = useStyles();
@@ -53,13 +46,13 @@ const dashboard = () => {
     isUserRegistered().then((res) => {
       setUserRegistered(() => res);
       if (res) {
-        console.log('in if');
+        console.log("in if");
         getUserDetails().then((res) => {
-          console.log('res: ', res);
+          console.log("res: ", res);
           setUserDetails(res);
         });
       } else {
-        registerUser();
+        // registerUser();
       }
     });
   }, []);
@@ -89,63 +82,79 @@ const dashboard = () => {
   }, [vantaEffect]);
   return (
     <div
-      className="flex flex-col items-center w-screen h-full pt-24"
+      className="flex flex-col items-center w-screen h-full pt-24 gap-10"
       ref={myRef}
     >
-      <section className="container inline-flex flex-col items-start justify-start min-h-screen gap-20 p-10 mx-auto">
+      <section className="container inline-flex flex-col items-start  gap-20 p-10 mx-auto">
         <div className="flex">
           <div>
-            <Group noWrap>
-              <Avatar src={data.avatar} size={94} radius="md" />
-              <div>
+            <Group noWrap className="h-full">
+              <Avatar
+                src="https://cdn.discordapp.com/attachments/1006199923374559362/1064433612528824361/CYBERPUNK_Farhaj_person_with_no_spectacles_wearing_brown_jacket_8db751da-a0ca-4dd0-9b6f-cb3823076b38.png"
+                size={154}
+                radius="md"
+              />
+              <div className="flex flex-col h-full">
                 <Text
                   size="xs"
-                  sx={{ textTransform: 'uppercase' }}
+                  sx={{ textTransform: "uppercase" }}
                   weight={700}
                   color="dimmed"
                 >
-                  {data.title}
+                  Username
                 </Text>
 
-                <Text size="lg" weight={500}>
-                  {data.name}
+                <Text size="xl" weight={500}>
+                  Wallet Address{" "}
                 </Text>
-
-                <Group noWrap spacing={10} mt={3}>
-                  {/* <AiAt stroke={1.5} size={16}  /> */}
-                  <Text size="xs" color="dimmed">
-                    {data.email}
-                  </Text>
-                </Group>
-
-                <Group noWrap spacing={10} mt={5}>
-                  <AiFillPhone stroke={1.5} size={16} />
-                  <Text size="xs" color="dimmed">
-                    {data.phone}
-                  </Text>
-                </Group>
               </div>
             </Group>
           </div>
         </div>
-        <button onClick={() => setIsItemModalOpen(true)}>Upload DeItem</button>
-        <button onClick={() => {}}>Register User</button>
-        <button onClick={() => setIsLicenceModalOpen(true)}>
-          Create Licence{' '}
-        </button>
-        <button onClick={() => setIsItemModalOpen(true)}>Upload DeItem</button>
       </section>
-      <div className="flex w-full gap-10 overflow-x-auto">
-        <Draggable className={classes.draggable}>
-          <>
-            {[...Array(10)].map(() => (
-              <div className={classes.card}>
-                <DisplayCard />
-              </div>
-            ))}
-          </>
-        </Draggable>
-      </div>
+      <section className="container w-[95%] backdrop-blur-md bg-opacity-10 rounded-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
+        <div className="inline-flex items-end justify-between w-full space-x-5">
+          <p className="text-4xl font-bold leading-10">Uploaded Items</p>
+          <Button
+            onClick={() => setIsItemModalOpen(true)}
+            size="md"
+            className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
+            styles={{
+              root: { border: "none" },
+            }}
+          >
+            Upload
+          </Button>
+        </div>
+        <div className="flex w-full gap-10 overflow-x-auto">
+          <Draggable className={classes.draggable}>
+            <>
+              {[...Array(10)].map((image) => (
+                <div className={classes.card}>
+                  <DisplayCard image={image} />
+                </div>
+              ))}
+            </>
+          </Draggable>
+        </div>
+      </section>
+      <section className="container w-[95%] backdrop-blur-md bg-opacity-10 rounded-t-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
+        <div className="inline-flex items-end justify-between w-full space-x-5">
+          <p className="text-4xl font-bold leading-10">Purchased Licenses</p>
+          
+        </div>
+        <div className="flex w-full gap-10 overflow-x-auto">
+          <Draggable className={classes.draggable}>
+            <>
+              {[...Array(10)].map((image) => (
+                <div className={classes.card}>
+                  <DisplayCard image={image} />
+                </div>
+              ))}
+            </>
+          </Draggable>
+        </div>
+      </section>
 
       <NewItemForm
         isItemModalOpen={isItemModalOpen}
