@@ -8,18 +8,19 @@ import {
   TextInput,
   Textarea,
   useMantineTheme,
-} from '@mantine/core';
-import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
-import React, { useState } from 'react';
-import { NFTStorage } from 'nft.storage';
-import { ToastContainer } from 'react-toastify';
+} from "@mantine/core";
+import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from "@mantine/dropzone";
+import React, { useState } from "react";
+import { NFTStorage } from "nft.storage";
+import { ToastContainer } from "react-toastify";
+import { Button } from "@mantine/core";
 
 const NewItemForm = ({ setIsModalOpen }) => {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
+    title: "",
+    description: "",
     collection: false,
-    mediaType: '',
+    mediaType: "",
     tags: [],
     licences: [],
     files: null,
@@ -30,7 +31,7 @@ const NewItemForm = ({ setIsModalOpen }) => {
   async function handelSubmit(e) {
     // defaultToast('Creating DeItem...');
     e.preventDefault();
-    console.log('ON SUBMIT:', formData);
+    console.log("ON SUBMIT:", formData);
     // const sendData = new FormData();
     // sendData.append('title', formData.title);
     // sendData.append('description', formData.description);
@@ -45,8 +46,8 @@ const NewItemForm = ({ setIsModalOpen }) => {
       const client = new NFTStorage({
         token: process.env.NEXT_PUBLIC_NFT_STORAGE,
       });
-      console.log('client: ', client);
-      console.log('IN TRY: ', formData.files);
+      console.log("client: ", client);
+      console.log("IN TRY: ", formData.files);
       // const imageFile = new File([ someBinaryImageData ], 'nft.png', { type: 'image/png' })
       let urls = [];
       formData.files.map(async (file) => {
@@ -97,28 +98,28 @@ const NewItemForm = ({ setIsModalOpen }) => {
             styles={{
               controlActive: {
                 background:
-                  'linear-gradient(to right, rgb(251, 113, 133), rgb(217, 70, 239), rgb(99, 102, 241))',
+                  "linear-gradient(to right, rgb(251, 113, 133), rgb(217, 70, 239), rgb(99, 102, 241))",
               },
             }}
             onChange={(val) => setFormData({ ...formData, collection: val })}
             data={[
-              { label: 'Single', value: false },
-              { label: 'Collection', value: true },
+              { label: "Single", value: false },
+              { label: "Collection", value: true },
             ]}
           />
           <div
             className={`inline-block mb-2 ${
-              theme === 'dark' ? 'text-white' : 'text-gray-500'
+              theme === "dark" ? "text-white" : "text-gray-500"
             }`}
           >
             File Upload
           </div>
           <Dropzone
             onDrop={(files) => {
-              console.log('accepted files', files);
+              console.log("accepted files", files);
               setFormData({ ...formData, files: files });
             }}
-            onReject={(files) => console.log('rejected files', files)}
+            onReject={(files) => console.log("rejected files", files)}
             maxFiles={formData.collection ? 5 : 1}
             multiple={formData.collection}
             accept={IMAGE_MIME_TYPE}
@@ -129,9 +130,9 @@ const NewItemForm = ({ setIsModalOpen }) => {
               <div
                 className={`flex flex-col relative w-full h-32 border-2 border-blue-200 border-dashed 
             ${
-              theme === 'dark'
-                ? 'group-hover:bg-gray-500 group-hover:border-gray-200'
-                : 'group-hover:bg-gray-100 group-hover:border-gray-300'
+              theme === "dark"
+                ? "group-hover:bg-gray-500 group-hover:border-gray-200"
+                : "group-hover:bg-gray-100 group-hover:border-gray-300"
             }
             
             `}
@@ -153,7 +154,7 @@ const NewItemForm = ({ setIsModalOpen }) => {
                   </svg>
                   <span
                     className={`pt-1 text-sm tracking-wider ${
-                      theme === 'dark' ? 'text-white' : 'text-gray-400'
+                      theme === "dark" ? "text-white" : "text-gray-400"
                     } `}
                   >
                     Attach a file
@@ -176,10 +177,10 @@ const NewItemForm = ({ setIsModalOpen }) => {
               placeholder="Pick one"
               className="flex-1"
               data={[
-                { value: 'Photo', label: 'Photo' },
-                { value: 'Video', label: 'Video' },
-                { value: 'Meme', label: 'Meme' },
-                { value: 'Audio', label: 'Audio' },
+                { value: "Photo", label: "Photo" },
+                { value: "Video", label: "Video" },
+                { value: "Meme", label: "Meme" },
+                { value: "Audio", label: "Audio" },
               ]}
               onChange={(val) => setFormData({ ...formData, mediaType: val })}
             />
@@ -190,13 +191,13 @@ const NewItemForm = ({ setIsModalOpen }) => {
               className="flex-1"
               styles={{
                 wrapper: {
-                  '&:hover': { borderColor: 'white' },
-                  '&:focus': { borderColor: 'white' },
-                  '&:active': { borderColor: 'white' },
+                  "&:hover": { borderColor: "white" },
+                  "&:focus": { borderColor: "white" },
+                  "&:active": { borderColor: "white" },
                 },
                 input: {
-                  '&:hover': { borderColor: 'white' },
-                  '&:focus': { borderColor: 'white' },
+                  "&:hover": { borderColor: "white" },
+                  "&:focus": { borderColor: "white" },
                 },
               }}
               onChange={(val) => setFormData({ ...formData, tags: val })}
@@ -222,20 +223,20 @@ const NewItemForm = ({ setIsModalOpen }) => {
             value={formData.licences}
             data={[
               {
-                value: '0',
-                label: 'Free Licence',
+                value: "0",
+                label: "Free Licence",
               },
               {
-                value: '1',
-                label: 'Standard Licence',
+                value: "1",
+                label: "Standard Licence",
               },
               {
-                value: '2',
-                label: 'Premium Licence',
+                value: "2",
+                label: "Premium Licence",
               },
               {
-                value: '3',
-                label: 'Exclusive Licence',
+                value: "3",
+                label: "Exclusive Licence",
               },
             ]}
             onChange={(val) => setFormData({ ...formData, licences: val })}
@@ -254,7 +255,16 @@ const NewItemForm = ({ setIsModalOpen }) => {
               setFormData({ ...formData, description: event.target.value })
             }
           />
-          <button onClick={handelSubmit}>SUBMIT</button>
+          <Button
+            onClick={handelSubmit}
+            size="md"
+            className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500 w-full"
+            styles={{
+              root: { border: "none" },
+            }}
+          >
+            SUBMIT
+          </Button>
         </div>
       </Modal>
       <ToastContainer
