@@ -119,7 +119,7 @@ contract Depictorial is ReentrancyGuard {
                 AssetType: Type.Atomic
             })
         );
-        registerUser();
+        registerUser(owner);
         init();
     }
 
@@ -137,22 +137,22 @@ contract Depictorial is ReentrancyGuard {
     }
 
     // function to register a user, from msg.sender, return the user Id
-    function registerUser() public returns (bool) {
-        if (users[msg.sender].userAddress != address(0)) {
-            return true;
-        }
-        users[msg.sender] = User({
-            userAddress: payable(msg.sender),
-            atomicIds: new uint256[](0),
-            collectionIds: new uint256[](0),
-            licenseIds: new uint256[](0),
-            purchaseIds: new uint256[](0)
-        });
-        return true;
-    }
+    // function registerUser() public returns (bool) {
+    //     if (users[msg.sender].userAddress != address(0)) {
+    //         return true;
+    //     }
+    //     users[msg.sender] = User({
+    //         userAddress: payable(msg.sender),
+    //         atomicIds: new uint256[](0),
+    //         collectionIds: new uint256[](0),
+    //         licenseIds: new uint256[](0),
+    //         purchaseIds: new uint256[](0)
+    //     });
+    //     return true;
+    // }
 
     // function to register a user, from msg.sender, return the user Id
-    function registerUser(address _addr) public onlyOwner returns (bool) {
+    function registerUser(address _addr) public returns (bool) {
         if (users[msg.sender].userAddress != address(0)) {
             return true;
         }
@@ -525,7 +525,7 @@ contract Depictorial is ReentrancyGuard {
                 Type.Atomic,
                 DeItemType.Photo,
                 licenseIds,
-                "https://bafkreibknu5hpvgzrkgx6zgzp4zubkwvom72f4xmeg7hpqwsanopjh6j5q.ipfs.nftstorage.link   /"
+                "ipfs://bafyreihe2imleb7ayp64boy6rio2f3fwicrd4fto723xd6f3pgf4c2gpbm/metadata.json"
             );
         }
         // create 5 collections
