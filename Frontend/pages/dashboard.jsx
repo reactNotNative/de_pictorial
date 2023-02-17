@@ -16,7 +16,7 @@ import {
   createLicence,
   createDeItem,
 } from '../utilities/contractfunctions';
-import { mediaInfoAtom, userDataAtom } from '../store/global';
+import { isModalOpenAtom, userDataAtom } from '../store/global';
 import { useAtom } from 'jotai';
 import { ethers } from 'ethers';
 const dashboard = () => {
@@ -25,7 +25,6 @@ const dashboard = () => {
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const [isLicenceModalOpen, setIsLicenceModalOpen] = useState(false);
   const [userDetails, setUserDetails] = useAtom(userDataAtom);
-  const [cardImage, SetcardImage] = useAtom(mediaInfoAtom);
 
   const useStyles = createStyles((theme) => ({
     draggable: {
@@ -41,6 +40,7 @@ const dashboard = () => {
   const { classes } = useStyles();
 
   const [account, setAccount] = useState(null);
+  // const [userData, setUserData] = useAtom(userDataAtom);
 
   const checkWalletConnected = async () => {
     const { ethereum } = window;
@@ -49,6 +49,7 @@ const dashboard = () => {
       console.log('Install Metamask');
       return;
     }
+
     const accounts = await ethereum.request({
       method: 'eth_accounts',
     });
@@ -69,10 +70,6 @@ const dashboard = () => {
     }
   };
 
-  // print cardImage
-  useEffect(() => {
-    console.log('cardImage', cardImage);
-  }, [cardImage]);
   useEffect(() => {
     getContract();
     checkWalletConnected();
@@ -162,60 +159,12 @@ const dashboard = () => {
               <>
                 {userDetails &&
                   userDetails['atomicDetails']?.map((image, id) => {
-                    // useEffect(() => {
-                    //fetch from metadata
-                    // console.log(image);
-                    // metaData &&
-                    // let newMetaData = image.metaData?.replace(
-                    //   'ipfs://',
-                    //   'https://cloudflare-ipfs.com/ipfs/'
-                    // );
-
-                    // image.metaData &&
-                    //   fetch(newMetaData)
-                    //     .then((res) => res.json())
-                    //     .then((data) => {
-                    //       let newImageLink = data.image.replace(
-                    //         'ipfs://',
-                    //         'https://cloudflare-ipfs.com/ipfs/'
-                    //       );
-                    //       console.log(newImageLink);
-                    //       // image={image}
-                    //       //                 AssetType={image.AssetType}
-                    //       //                 Id={image.Id}
-                    //       //                 ItemType={image.ItemType}
-                    //       //                 Owner={image.Owner}
-                    //       //                 licenseIds={image.licenseIds}
-                    //       //                 metaData={image.metaData}
-                    //       let obj = {
-                    //         AssetType: image.AssetType,
-                    //         Id: image.Id,
-                    //         ItemType: image.ItemType,
-                    //         Owner: image.Owner,
-                    //         licenseIds: image.licenseIds,
-                    //         collection: data.collection,
-                    //         description: data.description,
-                    //         image: newImageLink,
-                    //         price: data.price,
-                    //         mediaType: data.mediaType,
-                    //         name: data.name,
-                    //         tags: data.tags,
-                    //       };
-                    //       // SetcardImage();
-                    //       cardImage &&
-                    //         SetcardImage((cardImage) =>
-                    //           // add obj with key as obj.Id and value as obj to cardImage
-                    //           Object.assign(cardImage, { [obj.Id]: obj })
-                    //         );
-                    //     });
-                    // }, []);
-
                     return (
                       <div className={classes.card} key={id}>
                         <DisplayCard
-                          // image={image}
+                          image={image}
                           AssetType={image.AssetType}
-                          Id={cardImage.Id}
+                          Id={image.Id}
                           ItemType={image.ItemType}
                           Owner={image.Owner}
                           licenseIds={image.licenseIds}
