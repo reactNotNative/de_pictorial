@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from 'react';
 import {
   SegmentedControl,
   TextInput,
@@ -6,28 +6,28 @@ import {
   Select,
   Grid,
   createStyles,
-} from "@mantine/core";
-import FOG from "vanta/dist/vanta.fog.min.js";
-import { AiOutlineSearch, AiOutlineArrowRight } from "react-icons/ai";
-import thumbnail from "../constants/images";
-import DisplayCard from "./../components/DisplayCard";
-import Draggable from "./../components/Draggable";
+} from '@mantine/core';
+import FOG from 'vanta/dist/vanta.fog.min.js';
+import { AiOutlineSearch, AiOutlineArrowRight } from 'react-icons/ai';
+import thumbnail from '../constants/images';
+import DisplayCard from './../components/DisplayCard';
+import Draggable from './../components/Draggable';
 
 const useStyles = createStyles((theme) => ({
   draggable: {
-    display: "flex",
-    marginBottom: "16px",
-    overflowX: "auto",
-    gap: "20px",
-    width: "100%",
-    cursor: "pointer",
-    padding: "8px 0",
+    display: 'flex',
+    marginBottom: '16px',
+    overflowX: 'auto',
+    gap: '20px',
+    width: '100%',
+    cursor: 'pointer',
+    padding: '8px 0',
   },
 }));
 const categories = () => {
   const myRef = useRef(null);
   const [vantaEffect, setVantaEffect] = useState(null);
-  const [value, setValue] = useState("react");
+  const [value, setValue] = useState('react');
   const { classes } = useStyles();
   useEffect(() => {
     if (!vantaEffect) {
@@ -65,20 +65,20 @@ const categories = () => {
               size="md"
               radius="md"
               data={[
-                { label: "Photo", value: "Photo" },
-                { label: "Video", value: "Video" },
-                { label: "Memes", value: "Meme" },
-                { label: "Audio", value: "Audio" },
+                { label: 'Photo', value: 'Photo' },
+                { label: 'Video', value: 'Video' },
+                { label: 'Memes', value: 'Meme' },
+                { label: 'Audio', value: 'Audio' },
               ]}
               transitionDuration={500}
               transitionTimingFunction="linear"
               styles={{
                 active: {
                   background:
-                    "linear-gradient(to right, rgb(251, 113, 133), rgb(217, 70, 239), rgb(99, 102, 241))",
+                    'linear-gradient(to right, rgb(251, 113, 133), rgb(217, 70, 239), rgb(99, 102, 241))',
                 },
-                root: { background: "none", border: "1px solid white" },
-                control: { border: "none" },
+                root: { background: 'none', border: '1px solid white' },
+                control: { border: 'none' },
               }}
             />
           </div>
@@ -90,10 +90,10 @@ const categories = () => {
               className="w-full"
               styles={{
                 input: {
-                  "&:hover": { borderColor: "white" },
-                  "&:focus": { borderColor: "white" },
-                  background: "none",
-                  borderWidth: "2px",
+                  '&:hover': { borderColor: 'white' },
+                  '&:focus': { borderColor: 'white' },
+                  background: 'none',
+                  borderWidth: '2px',
                 },
               }}
               rightSection={
@@ -101,7 +101,7 @@ const categories = () => {
                   size="sm"
                   className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
                   styles={{
-                    root: { border: "none", padding: "2px 6px" },
+                    root: { border: 'none', padding: '2px 6px' },
                   }}
                 >
                   <AiOutlineArrowRight size="1.5rem" />
@@ -116,9 +116,9 @@ const categories = () => {
               //   label="Sort By"
               placeholder="Sort By"
               data={[
-                { value: "Price", label: "Price" },
-                { value: "Trending", label: "Trending" },
-                { value: "Likes", label: "Likes" },
+                { value: 'Price', label: 'Price' },
+                { value: 'Trending', label: 'Trending' },
+                { value: 'Likes', label: 'Likes' },
               ]}
             />
           </div>
@@ -131,8 +131,8 @@ const categories = () => {
             <div className="flex w-full gap-10 overflow-x-auto">
               <Draggable className={classes.draggable}>
                 <>
-                  {thumbnail.map((image) => (
-                    <div className={classes.card}>
+                  {thumbnail.map((image, id) => (
+                    <div className={classes.card} key={id}>
                       <DisplayCard image={image} />
                     </div>
                   ))}
@@ -141,8 +141,8 @@ const categories = () => {
             </div>
           </section>
           <div className="grid grid-cols-4 place-content-center gap-10 w-full items-center">
-            {thumbnail.map((image) => (
-              <div className="mx-auto">
+            {thumbnail.map((image, id) => (
+              <div className="mx-auto" key={id}>
                 <DisplayCard image={image} />
               </div>
             ))}

@@ -1,39 +1,35 @@
-import Typewriter from "typewriter-effect";
-import { AiOutlineSearch, AiOutlineArrowRight } from "react-icons/ai";
-import React, { useState, useEffect, useRef } from "react";
-import FOG from "vanta/dist/vanta.fog.min.js";
-import DisplayCard from "./../components/DisplayCard";
+import Typewriter from 'typewriter-effect';
+import { AiOutlineSearch, AiOutlineArrowRight } from 'react-icons/ai';
+import React, { useState, useEffect, useRef } from 'react';
+import FOG from 'vanta/dist/vanta.fog.min.js';
+import DisplayCard from './../components/DisplayCard';
 import {
   TextInput,
   ActionIcon,
   useMantineTheme,
   createStyles,
   Button,
-} from "@mantine/core";
-import Draggable from "../components/Draggable";
-import { useAtom } from "jotai";
-import { userDataAtom } from "../store/global";
-import NewItemForm from "../components/NewItemForm";
-import thumbnail from "../constants/images";
+} from '@mantine/core';
+import Draggable from '../components/Draggable';
+
+import thumbnail from '../constants/images';
 const useStyles = createStyles((theme) => ({
   draggable: {
-    display: "flex",
-    marginBottom: "16px",
-    overflowX: "auto",
-    gap: "20px",
-    width: "100%",
-    cursor: "pointer",
-    padding: "8px 0",
+    display: 'flex',
+    marginBottom: '16px',
+    overflowX: 'auto',
+    gap: '20px',
+    width: '100%',
+    cursor: 'pointer',
+    padding: '8px 0',
   },
 }));
 
 const Home = () => {
   const [vantaEffect, setVantaEffect] = useState(null);
   const { classes } = useStyles();
-  const [user, setUser] = useAtom(userDataAtom);
-  const theme = useMantineTheme();
 
-  console.log(user);
+  const theme = useMantineTheme();
 
   const myRef = useRef(null);
   useEffect(() => {
@@ -71,7 +67,7 @@ const Home = () => {
               <span className="font-semibold">Decentralizing </span>
               <Typewriter
                 options={{
-                  strings: ["Ownership", "Media", "Licences"],
+                  strings: ['Ownership', 'Media', 'Licences'],
                   deleteSpeed: 40,
                   autoStart: true,
                   loop: true,
@@ -92,10 +88,10 @@ const Home = () => {
             className="w-1/2"
             styles={{
               input: {
-                "&:hover": { borderColor: "white" },
-                "&:focus": { borderColor: "white" },
-                background: "none",
-                borderWidth: "2px",
+                '&:hover': { borderColor: 'white' },
+                '&:focus': { borderColor: 'white' },
+                background: 'none',
+                borderWidth: '2px',
               },
             }}
             rightSection={
@@ -103,7 +99,7 @@ const Home = () => {
                 size="md"
                 className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
                 styles={{
-                  root: { border: "none", padding: "2px 6px" },
+                  root: { border: 'none', padding: '2px 6px' },
                 }}
               >
                 <AiOutlineArrowRight size="2rem" />
@@ -123,8 +119,8 @@ const Home = () => {
           <div className="flex w-full gap-10 overflow-x-auto">
             <Draggable className={classes.draggable}>
               <>
-                {thumbnail.map((image) => (
-                  <div className={classes.card}>
+                {thumbnail.map((image, id) => (
+                  <div className={classes.card} key={id}>
                     <DisplayCard image={image} />
                   </div>
                 ))}
@@ -142,8 +138,8 @@ const Home = () => {
           <div className="flex w-full gap-10 overflow-x-auto">
             <Draggable className={classes.draggable}>
               <>
-                {thumbnail.map((image) => (
-                  <div className={classes.card}>
+                {thumbnail.map((image, id) => (
+                  <div className={classes.card} key={id}>
                     <DisplayCard image={image} />
                   </div>
                 ))}

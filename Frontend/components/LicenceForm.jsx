@@ -27,6 +27,7 @@ const LicenceForm = ({
   });
   console.log(formData);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   async function handelSubmit(e) {
     if (formData.licenceType === 'Free') {
       formData.price = 0;
@@ -49,7 +50,8 @@ const LicenceForm = ({
 
       deLicence(metadata, formData);
     } catch (err) {
-      // error("Error Uploading Cover Image");
+      setLoading(false);
+      setError(err);
       console.log(err);
     }
 
@@ -57,9 +59,16 @@ const LicenceForm = ({
   }
 
   async function deLicence(metadata, formData) {
-    await createLicence(formData.price, formData.duration, metadata);
-    setLoading(false);
-    setIsLicenceModalOpen(false);
+    try {
+      await createLicence(formData.price, formData.duration, metadata);
+      setLoading(false);
+      setIsLicenceModalOpen(false);
+    } catch (err) {
+      console.log(err['error']['data']['message']);
+
+      setLoading(false);
+      setError(err['error']['data']['message']);
+    }
   }
   return (
     <Modal
@@ -188,6 +197,7 @@ const LicenceForm = ({
             setFormData({ ...formData, description: e.target.value })
           }
         />
+        {error && <p className="text-red-500">{error}</p>}
         <Button onClick={handelSubmit}>SUBMIT</Button>
       </div>
     </Modal>

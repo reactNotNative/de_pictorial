@@ -29,14 +29,15 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
     files: null,
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [userLicences, setUserLicences] = useState([]);
   useEffect(() => {
-    console.log('LICENCES: ', userDetails);
+    // console.log('LICENCES: ', userDetails);
     if (userDetails == null) return;
     userDetails?.licenseDetails?.map((licence) => {
-      console.log('LICENCE: ', licence);
+      // console.log('LICENCE: ', licence);
       let licenceObj = JSON.parse(licence.metaData);
-      console.log('LICENCE OBJ: ', licenceObj);
+      // console.log('LICENCE OBJ: ', licenceObj);
       setUserLicences((userLicences) => [
         ...userLicences,
         {
@@ -49,7 +50,7 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
     // setUserLicences();
   }, [userDetails]);
 
-  console.log(formData);
+  // console.log(formData);
   const theme = useMantineTheme();
   async function handelSubmit(e) {
     // defaultToast('Creating DeItem...');
@@ -89,35 +90,38 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
       deItem(urls, formData);
     } catch (err) {
       // error("Error Uploading Cover Image");
-      console.log(err);
+
+      setLoading(false);
+      setError(err);
     }
   }
   async function deItem(urls, formData) {
-    // defaultToast('Uploading Smart Contract...');
-    console.log('IN CREATE DEITEM');
-    console.log('URLS:', urls);
-    console.log('FORMDATA:', formData);
-    let media = {
-      Photo: 0,
-      Video: 1,
-      Audio: 2,
-      Meme: 3,
-    };
-    console.log(
-      'OUPUT',
-      formData.collection ? 1 : 0,
-      media[formData.mediaType],
-      formData.licences,
-      urls[0].url
-    );
-    await createDeItem(
-      formData.collection ? 1 : 0,
-      media[formData.mediaType],
-      formData.licences,
-      urls[0].url
-    );
-    console.log('SMART CONTRACT DONE');
-    setLoading(false);
+    try {
+      // defaultToast('Uploading Smart Contract...');
+      console.log('IN CREATE DEITEM');
+      console.log('URLS:', urls);
+      console.log('FORMDATA:', formData);
+      let media = {
+        Photo: 0,
+        Video: 1,
+        Audio: 2,
+        Meme: 3,
+      };
+
+      await createDeItem(
+        formData.collection ? 1 : 0,
+        media[formData.mediaType],
+        formData.licences,
+        urls[0].url
+      );
+      console.log('SMART CONTRACT DONE');
+      setLoading(false);
+      setIsModalOpen(false);
+    } catch (err) {
+      console.log('ERROR: ', err);
+      setLoading(false);
+      setError(err['error']['data']['message']);
+    }
   }
   return (
     <>
@@ -284,6 +288,8 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
               setFormData({ ...formData, description: event.target.value })
             }
           />
+          {error && <p className="text-red-500">{error}</p>}
+
           <Button onClick={handelSubmit}>SUBMIT</Button>
         </div>
       </Modal>
