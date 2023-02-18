@@ -50,7 +50,7 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
     // setUserLicences();
   }, [userDetails]);
 
-  // console.log(formData);
+  console.log(formData);
   const theme = useMantineTheme();
   async function handelSubmit(e) {
     // defaultToast('Creating DeItem...');
@@ -66,8 +66,7 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
       });
       console.log('client: ', client);
       console.log('IN TRY: ', formData.files);
-      // const imageFile = new File([ someBinaryImageData ], 'nft.png', { type: 'image/png' })
-      // let urls = [];
+
       let urls = formData.files.map((file) => {
         return client.store({
           name: formData.title,
@@ -77,27 +76,18 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
           collection: formData.collection,
           image: file,
         });
-
-        // urls.push(metadata.url);
-        // console.log('METADATA: ', metadata);
-        // console.log(metadata);
-        // update formData with the url
-        // setFormData({ ...formData, files: urls });
       });
       urls = await Promise.all(urls);
-
       console.log('URLS: ', urls[0]);
       deItem(urls, formData);
     } catch (err) {
-      // error("Error Uploading Cover Image");
-
+      console.log('ERROR: ', err);
       setLoading(false);
       setError(err);
     }
   }
   async function deItem(urls, formData) {
     try {
-      // defaultToast('Uploading Smart Contract...');
       console.log('IN CREATE DEITEM');
       console.log('URLS:', urls);
       console.log('FORMDATA:', formData);

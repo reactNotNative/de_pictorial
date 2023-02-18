@@ -21,7 +21,7 @@ const LicenceForm = ({
   const [formData, setFormData] = useState({
     title: null,
     duration: 12,
-    description: null,
+    description: '',
     price: 0,
     licenceType: 'Paid',
   });

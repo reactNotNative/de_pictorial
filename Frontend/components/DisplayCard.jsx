@@ -14,45 +14,40 @@ const DisplayCard = ({
   metaData,
 }) => {
   const [cardImage, SetcardImage] = useAtom(mediaInfoAtom);
+  const [obj, setObj] = useState(null);
+  console.log('Meatadata: ', metaData);
   useEffect(() => {
-    //fetch from metadata
-    console.log(image);
-    // metaData &&
-    let newMetaData = metaData?.replace(
+    let newMetaData = metaData.replace(
       'ipfs://',
       'https://cloudflare-ipfs.com/ipfs/'
     );
 
-    metaData &&
-      fetch(newMetaData)
-        .then((res) => res.json())
-        .then((data) => {
-          let newImageLink = data.image.replace(
-            'ipfs://',
-            'https://cloudflare-ipfs.com/ipfs/'
-          );
-          console.log('newImageLink', newImageLink);
-          let obj = {
-            AssetType: AssetType,
-            Id: Id,
-            ItemType: ItemType,
-            Owner: Owner,
-            licenseIds: licenseIds,
-            collection: data.collection,
-            description: data.description,
-            image: newImageLink,
-            price: data.price,
-            mediaType: data.mediaType,
-            name: data.name,
-            tags: data.tags,
-          };
-          // SetcardImage();
-          cardImage &&
-            SetcardImage((cardImage) =>
-              // add obj with key as obj.Id and value as obj to cardImage
-              Object.assign(cardImage, { [obj.Id]: obj })
-            );
-        });
+    fetch(newMetaData)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('data', data);
+        let newImageLink = data.image.replace(
+          'ipfs://',
+          'https://cloudflare-ipfs.com/ipfs/'
+        );
+        console.log('newImageLink', newImageLink);
+        let obj = {
+          AssetType: AssetType,
+          Id: Id,
+          ItemType: ItemType,
+          Owner: Owner,
+          licenseIds: licenseIds,
+          collection: data['collection'],
+          description: data['description'],
+          image: newImageLink,
+          price: data['price'],
+          mediaType: data['mediaType'],
+          name: data['name'],
+          tags: data['tags'],
+        };
+        setObj(obj);
+        SetcardImage([...cardImage, obj]);
+      });
   }, []);
   // print cardImage
   useEffect(() => {
@@ -63,12 +58,15 @@ const DisplayCard = ({
     <div className="inline-flex shrink-0 flex-col space-y-5 select-none items-start justify-start w-80 px-5 py-8 border-2 rounded-2xl border-gray-400">
       <div className="flex flex-col items-center justify-end  w-full rounded-2xl">
         <div
-          className="inline-flex items-end grow justify-center rounded-lg h-72 px-4 pb-4 w-full object-cover"
+          className={`inline-flex items-end grow justify-center rounded-lg h-72 px-4 pb-4 w-full object-cover `}
           style={{
             backgroundSize: 'contain',
-            background: ` linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0) 73.23%, #000000 100%), url(${cardImage[Id]?.image}) center center/cover no-repeat fixed`,
+            background: ` linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0) 73.23%, #000000 100%) , url(${obj?.image}) center center/cover no-repeat fixed`,
           }}
         >
+          {/* <div className="w-full h-auto">
+            <img loading="lazy" src={`${obj?.image}`} alt="" />
+          </div> */}
           <div className="flex  items-center justify-between w-full">
             <div className="flex space-x-2.5 items-center justify-start w-full">
               <img
@@ -80,16 +78,16 @@ const DisplayCard = ({
                   Created by
                 </p>
                 <p className="text-base font-bold leading-tight text-gray-50">
-                  {cardImage[Id]?.Owner?.slice(
+                  {obj?.Owner?.slice(
                     // first 6 characters
                     0,
                     4
                   )}{' '}
                   ...{' '}
-                  {cardImage[Id]?.Owner?.slice(
+                  {obj?.Owner?.slice(
                     // last 4 characters
-                    cardImage[Id]?.Owner?.length - 4,
-                    cardImage[Id]?.Owner?.length
+                    obj?.Owner?.length - 4,
+                    obj?.Owner?.length
                   )}
                 </p>
               </div>
@@ -101,10 +99,10 @@ const DisplayCard = ({
       <div className="inline-flex  items-center justify-between w-full">
         <div className="inline-flex flex-col space-y-0.5 items-start justify-start h-full">
           <p className="text-base font-bold leading-tight text-white">
-            {cardImage[Id]?.name}
+            {obj?.name}
           </p>
           <div className="inline-flex space-x-1 py-2 items-start justify-start w-full">
-            {cardImage[Id]?.tags?.map((tag) => (
+            {obj?.tags?.map((tag) => (
               <Badge color="gray" variant="outline">
                 {tag}
               </Badge>
@@ -112,7 +110,7 @@ const DisplayCard = ({
           </div>
         </div>
         <Button
-          onClick={() => Router.push(`/media/${cardImage[Id]?.Id}`)}
+          onClick={() => Router.push(`/media/${obj?.Id}`)}
           className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
           size="md"
           color="gray"

@@ -40,7 +40,6 @@ const dashboard = () => {
   const { classes } = useStyles();
 
   const [account, setAccount] = useState(null);
-  // const [userData, setUserData] = useAtom(userDataAtom);
 
   const checkWalletConnected = async () => {
     const { ethereum } = window;
@@ -69,22 +68,22 @@ const dashboard = () => {
       console.log('Create a Ethereum Account');
     }
   };
-
   useEffect(() => {
     getContract();
     checkWalletConnected();
     isUserRegistered().then((res) => {
-      // setUserRegistered(res);
-
-      console.log('res IS USER REGISTERED: ', res);
       if (res) {
-        console.log('in if');
         getUserDetails().then((res) => {
-          console.log('USER DETAILS: ', res);
           setUserDetails(res);
         });
       }
     });
+  }, []);
+  useEffect(() => {
+    console.log('USER DETAILS: ', userDetails);
+  }, [userDetails]);
+
+  useEffect(() => {
     if (!vantaEffect) {
       setVantaEffect(
         FOG({
@@ -159,16 +158,18 @@ const dashboard = () => {
               <>
                 {userDetails &&
                   userDetails['atomicDetails']?.map((image, id) => {
+                    // console.log('IMAGE', image);
+                    // console.log();
                     return (
                       <div className={classes.card} key={id}>
                         <DisplayCard
                           image={image}
-                          AssetType={image.AssetType}
-                          Id={image.Id}
-                          ItemType={image.ItemType}
-                          Owner={image.Owner}
-                          licenseIds={image.licenseIds}
-                          metaData={image.metaData}
+                          AssetType={image['AssetType']}
+                          Id={image['Id']}
+                          ItemType={image['ItemType']}
+                          Owner={image['Owner']}
+                          licenseIds={image['licenseIds']}
+                          metaData={image['metaData']}
                         />
                       </div>
                     );
@@ -194,7 +195,7 @@ const dashboard = () => {
             </Button>
           </div>
           <div className="flex w-full gap-10 overflow-x-auto">
-            <Draggable className={classes.draggable}>
+            {/* <Draggable className={classes.draggable}>
               <>
                 {[...Array(10)].map((image, id) => (
                   <div className={classes.card} key={id}>
@@ -202,7 +203,7 @@ const dashboard = () => {
                   </div>
                 ))}
               </>
-            </Draggable>
+            </Draggable> */}
           </div>
         </section>
       )}
