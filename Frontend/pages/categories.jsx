@@ -12,7 +12,7 @@ import { AiOutlineSearch, AiOutlineArrowRight } from 'react-icons/ai';
 import thumbnail from '../constants/images';
 import DisplayCard from './../components/DisplayCard';
 import Draggable from './../components/Draggable';
-
+import { getDeItemById, getAllAtomics } from '../utilities/contractfunctions';
 const useStyles = createStyles((theme) => ({
   draggable: {
     display: 'flex',
@@ -29,6 +29,56 @@ const categories = () => {
   const [vantaEffect, setVantaEffect] = useState(null);
   const [value, setValue] = useState('react');
   const { classes } = useStyles();
+  const [obj, setObj] = useState(null);
+  const [error, setError] = useState(null);
+
+  function getMetadata(res) {
+    res.map((item) => {
+      let metadata = item['deItemDetails']['metaData'];
+      let newMetaData = metadata.replace(
+        'ipfs://',
+        'https://cloudflare-ipfs.com/ipfs/'
+      );
+      fetch(newMetaData)
+        .then((res) => res.json())
+        .then((data) => {
+          // console.log('data', data);
+          let newImageLink = data.image.replace(
+            'ipfs://',
+            'https://cloudflare-ipfs.com/ipfs/'
+          );
+          let obj = {
+            AssetType: res['deItemDetails']['AssetType'],
+            Id: res['deItemDetails']['Id'],
+            ItemType: res['deItemDetails']['ItemType'],
+            Owner: res['deItemDetails']['Owner'],
+            licenseDetails: res['licenseDetails'],
+            purchaseDetails: res['purchaseDetails'],
+            collection: data['collection'],
+            description: data['description'],
+            image: newImageLink,
+            mediaType: data['mediaType'],
+            name: data['name'],
+          };
+          setObj(obj);
+        });
+    });
+  }
+  function getAllMedia() {
+    getAllAtomics().then((res) => {
+      console.log('RES: ', res);
+      // getMetadata(res);
+    });
+  }
+
+  useEffect(() => {
+    try {
+      getAllMedia();
+    } catch (err) {
+      setError(err);
+    }
+  }, []);
+
   useEffect(() => {
     if (!vantaEffect) {
       setVantaEffect(
@@ -133,7 +183,7 @@ const categories = () => {
                 <>
                   {thumbnail.map((image, id) => (
                     <div className={classes.card} key={id}>
-                      <DisplayCard image={image} />
+                      {/* <DisplayCard image={image} /> */}
                     </div>
                   ))}
                 </>
@@ -143,7 +193,7 @@ const categories = () => {
           <div className="grid grid-cols-4 place-content-center gap-10 w-full items-center">
             {thumbnail.map((image, id) => (
               <div className="mx-auto" key={id}>
-                <DisplayCard image={image} />
+                {/* <DisplayCard image={image} /> */}
               </div>
             ))}
           </div>

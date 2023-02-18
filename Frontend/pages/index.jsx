@@ -117,7 +117,7 @@ const Home = () => {
             </p>
           </div>
           <div className="flex w-full gap-10 overflow-x-auto">
-            <Draggable className={classes.draggable}>
+            {/* <Draggable className={classes.draggable}>
               <>
                 {thumbnail.map((image, id) => (
                   <div className={classes.card} key={id}>
@@ -125,7 +125,7 @@ const Home = () => {
                   </div>
                 ))}
               </>
-            </Draggable>
+            </Draggable> */}
           </div>
         </section>
         <section className="container w-[95%] backdrop-blur-md mt-20 bg-opacity-10 rounded-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
@@ -136,7 +136,7 @@ const Home = () => {
             </p>
           </div>
           <div className="flex w-full gap-10 overflow-x-auto">
-            <Draggable className={classes.draggable}>
+            {/* <Draggable className={classes.draggable}>
               <>
                 {thumbnail.map((image, id) => (
                   <div className={classes.card} key={id}>
@@ -144,7 +144,7 @@ const Home = () => {
                   </div>
                 ))}
               </>
-            </Draggable>
+            </Draggable> */}
           </div>
         </section>
         {/* <NewItemForm /> */}
