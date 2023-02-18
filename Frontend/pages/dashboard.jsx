@@ -19,6 +19,7 @@ import {
 import { isModalOpenAtom, userDataAtom } from '../store/global';
 import { useAtom } from 'jotai';
 import { ethers } from 'ethers';
+import { toast } from 'react-hot-toast';
 const dashboard = () => {
   const myRef = useRef(null);
   const [vantaEffect, setVantaEffect] = useState(null);
@@ -45,7 +46,7 @@ const dashboard = () => {
     const { ethereum } = window;
 
     if (!ethereum) {
-      console.log('Install Metamask');
+      toast.error('Install Metamask');
       return;
     }
 
@@ -55,17 +56,16 @@ const dashboard = () => {
 
     if (accounts.length !== 0) {
       const account = accounts[0];
-      console.log('Found Account, ', account);
       let provider = new ethers.providers.Web3Provider(window.ethereum);
       let network = await provider.getNetwork();
       setAccount(account);
       if (network.name !== 'maticmum') {
-        console.log('Wrong network');
+        toast.error('Wrong Network');
       } else {
-        console.log('maticmum connected');
+        toast.success('Maticum Connected');
       }
     } else {
-      console.log('Create a Ethereum Account');
+      toast.error('Create a Ethereum Account');
     }
   };
   useEffect(() => {
@@ -79,9 +79,6 @@ const dashboard = () => {
       }
     });
   }, []);
-  useEffect(() => {
-    console.log('USER DETAILS: ', userDetails);
-  }, [userDetails]);
 
   useEffect(() => {
     if (!vantaEffect) {
@@ -158,8 +155,6 @@ const dashboard = () => {
               <>
                 {userDetails &&
                   userDetails['atomicDetails']?.map((image, id) => {
-                    // console.log('IMAGE', image);
-                    // console.log();
                     return (
                       <div className={classes.card} key={id}>
                         <DisplayCard

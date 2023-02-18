@@ -7,6 +7,7 @@ import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
 import { mainnet, polygonMumbai } from 'wagmi/chains';
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
 import { publicProvider } from 'wagmi/providers/public';
+import { Toaster } from 'react-hot-toast';
 import '@biconomy/web3-auth/dist/src/style.css';
 import { createTheme, NextUIProvider } from '@nextui-org/react';
 import { MantineProvider, createEmotionCache } from '@mantine/core';
@@ -49,6 +50,7 @@ function MyApp({ Component, pageProps }) {
       >
         <WagmiConfig client={wagmiClient}>
           <RainbowKitProvider chains={chains}>
+            <Toaster position="top-center" reverseOrder={false} />
             <Header />
             <Component {...pageProps} />
           </RainbowKitProvider>

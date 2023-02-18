@@ -1,5 +1,4 @@
 import {
-  Input,
   LoadingOverlay,
   Modal,
   MultiSelect,
@@ -10,12 +9,12 @@ import {
   useMantineTheme,
   Button,
 } from '@mantine/core';
-import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
 import React, { useEffect, useState } from 'react';
 import { NFTStorage } from 'nft.storage';
-import { ToastContainer } from 'react-toastify';
-import { isModalOpenAtom, userDataAtom } from '../store/global';
+import { userDataAtom } from '../store/global';
 import { useAtom } from 'jotai';
+import { toast } from 'react-hot-toast';
 const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
   const [userDetails, setUserDetails] = useAtom(userDataAtom);
 
@@ -32,40 +31,28 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
   const [error, setError] = useState('');
   const [userLicences, setUserLicences] = useState([]);
   useEffect(() => {
-    // console.log('LICENCES: ', userDetails);
     if (userDetails == null) return;
     userDetails?.licenseDetails?.map((licence) => {
-      // console.log('LICENCE: ', licence);
       let licenceObj = JSON.parse(licence.metaData);
-      // console.log('LICENCE OBJ: ', licenceObj);
       setUserLicences((userLicences) => [
         ...userLicences,
         {
           value: licence.Id.toNumber(),
           label: licenceObj.name,
-          // price: licence.price,
         },
       ]);
     });
-    // setUserLicences();
   }, [userDetails]);
 
-  console.log(formData);
   const theme = useMantineTheme();
   async function handelSubmit(e) {
-    // defaultToast('Creating DeItem...');
     e.preventDefault();
     setLoading(true);
-    // console.log('ON SUBMIT:', formData);
 
     try {
-      // defaultToast('Uploading Image...');
-
       const client = new NFTStorage({
         token: process.env.NEXT_PUBLIC_NFT_STORAGE,
       });
-      console.log('client: ', client);
-      console.log('IN TRY: ', formData.files);
 
       let urls = formData.files.map((file) => {
         return client.store({
@@ -78,19 +65,17 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
         });
       });
       urls = await Promise.all(urls);
-      console.log('URLS: ', urls[0]);
+      toast.success('Media Uploaded to Chain');
       deItem(urls, formData);
     } catch (err) {
-      console.log('ERROR: ', err);
+      toast.error('Failed to Upload Media to IPFS');
       setLoading(false);
       setError(err);
+      return;
     }
   }
   async function deItem(urls, formData) {
     try {
-      console.log('IN CREATE DEITEM');
-      console.log('URLS:', urls);
-      console.log('FORMDATA:', formData);
       let media = {
         Photo: 0,
         Video: 1,
@@ -104,11 +89,11 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
         formData.licences,
         urls[0].url
       );
-      console.log('SMART CONTRACT DONE');
       setLoading(false);
       setIsModalOpen(false);
+      toast.success('Media Added to Chain!');
     } catch (err) {
-      console.log('ERROR: ', err);
+      toast.error('Some Error Occured');
       setLoading(false);
       setError(err['error']['data']['message']);
     }
@@ -134,7 +119,7 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
           <SegmentedControl
             value={formData.collection}
             styles={{
-              active: {
+              controlActive: {
                 background:
                   'linear-gradient(to right, rgb(251, 113, 133), rgb(217, 70, 239), rgb(99, 102, 241))',
               },
@@ -156,7 +141,6 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
           </div>
           <Dropzone
             onDrop={(files) => {
-              console.log('accepted files', files);
               setFormData({ ...formData, files: files });
             }}
             onReject={(files) => console.log('rejected files', files)}
@@ -255,7 +239,6 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
               }
             />
           </div>
-          {/* {console.log('USRE LICENCES:', userLicences)} */}
           <MultiSelect
             disabled={false}
             placeholder="Select Licences"
@@ -280,20 +263,20 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
           />
           {error && <p className="text-red-500">{error}</p>}
 
-          <Button onClick={handelSubmit}>SUBMIT</Button>
+          <Button
+            styles={{
+              root: {
+                background:
+                  'linear-gradient(to right, rgb(251, 113, 133), rgb(217, 70, 239), rgb(99, 102, 241))',
+                border: 'none',
+              },
+            }}
+            onClick={handelSubmit}
+          >
+            SUBMIT
+          </Button>
         </div>
       </Modal>
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
     </>
   );
 };

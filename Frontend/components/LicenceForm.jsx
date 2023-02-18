@@ -25,7 +25,6 @@ const LicenceForm = ({
     price: 0,
     licenceType: 'Paid',
   });
-  console.log(formData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   async function handelSubmit(e) {
@@ -52,10 +51,8 @@ const LicenceForm = ({
     } catch (err) {
       setLoading(false);
       setError(err);
-      console.log(err);
+      toast.error('Error Creating Licence');
     }
-
-    console.log('formData: ', formData);
   }
 
   async function deLicence(metadata, formData) {
@@ -65,6 +62,7 @@ const LicenceForm = ({
       setIsLicenceModalOpen(false);
     } catch (err) {
       console.log(err['error']['data']['message']);
+      toast.error('Failed to create licence. Please try again later.');
 
       setLoading(false);
       setError(err['error']['data']['message']);

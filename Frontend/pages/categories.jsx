@@ -42,7 +42,6 @@ const categories = () => {
       fetch(newMetaData)
         .then((res) => res.json())
         .then((data) => {
-          // console.log('data', data);
           let newImageLink = data.image.replace(
             'ipfs://',
             'https://cloudflare-ipfs.com/ipfs/'

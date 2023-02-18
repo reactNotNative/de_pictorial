@@ -26,11 +26,9 @@ const index = () => {
   function getDeItem() {
     try {
       getDeItemById(id, 0).then((res) => {
-        console.log('RES: ', res);
         getMetadata(res);
       });
     } catch (err) {
-      console.log('ERR: ', err);
       setError(err);
     }
   }
@@ -43,7 +41,6 @@ const index = () => {
     fetch(newMetaData)
       .then((res) => res.json())
       .then((data) => {
-        // console.log('data', data);
         let newImageLink = data.image.replace(
           'ipfs://',
           'https://cloudflare-ipfs.com/ipfs/'
@@ -64,9 +61,6 @@ const index = () => {
         setObj(obj);
       });
   }
-  useEffect(() => {
-    console.log('OBJ:', obj);
-  }, [obj]);
 
   useEffect(() => {
     if (!vantaEffect) {
