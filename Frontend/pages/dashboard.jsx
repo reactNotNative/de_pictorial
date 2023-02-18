@@ -9,7 +9,7 @@ import DisplayCard from './../components/DisplayCard';
 import { Button } from '@mantine/core';
 import {
   getContract,
-  getAllLicences,
+  getDeItemById,
   getUserDetails,
   isUserRegistered,
   registerUser1,
@@ -26,7 +26,9 @@ const dashboard = () => {
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const [isLicenceModalOpen, setIsLicenceModalOpen] = useState(false);
   const [userDetails, setUserDetails] = useAtom(userDataAtom);
-
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [purchases, setPurchases] = useState([]);
+  const [refetch, setRefetch] = useState(false);
   const useStyles = createStyles((theme) => ({
     draggable: {
       display: 'flex',
@@ -68,17 +70,43 @@ const dashboard = () => {
       toast.error('Create a Ethereum Account');
     }
   };
+  function getPurchases(res) {
+    let purchases = [];
+    if (1) {
+      for (let i = 0; i < res['purchaseDetails'].length; i++) {
+        purchases.push(
+          getDeItemById(
+            res['purchaseDetails'][i]['DeItemId'].toNumber(),
+            0
+          ).then((res) => {
+            console.log('Purchases:', res);
+            setPurchases((prev) => [...prev, res]);
+            return res;
+          })
+        );
+      }
+    }
+    return purchases;
+  }
   useEffect(() => {
     getContract();
     checkWalletConnected();
     isUserRegistered().then((res) => {
+      setIsRegistered(res);
+
       if (res) {
         getUserDetails().then((res) => {
+          getPurchases(res);
+
           setUserDetails(res);
         });
       }
     });
-  }, []);
+  }, [refetch]);
+
+  useEffect(() => {
+    console.log('userDetails:', userDetails);
+  }, [userDetails]);
 
   useEffect(() => {
     if (!vantaEffect) {
@@ -104,7 +132,7 @@ const dashboard = () => {
   }, [vantaEffect]);
   return (
     <div
-      className="flex flex-col items-center w-screen h-full pt-24 gap-10"
+      className="flex flex-col items-center w-screen h-full pt-24 gap-10 min-h-screen"
       ref={myRef}
     >
       <section className="container inline-flex flex-col items-start  gap-20 p-10 mx-auto">
@@ -112,7 +140,7 @@ const dashboard = () => {
           <div>
             <Group noWrap className="h-full">
               <Avatar
-                src="https://cdn.discordapp.com/attachments/1006199923374559362/1064433612528824361/CYBERPUNK_Farhaj_person_with_no_spectacles_wearing_brown_jacket_8db751da-a0ca-4dd0-9b6f-cb3823076b38.png"
+                src={`https://api.dicebear.com/5.x/pixel-art/svg?seed=${account?.toUpperCase()}&options[mood][]=happy`}
                 size={154}
                 radius="md"
               />
@@ -123,19 +151,33 @@ const dashboard = () => {
                   weight={700}
                   color="dimmed"
                 >
-                  Username
+                  Welcome To De'Pictorial
                 </Text>
 
                 <Text size="xl" weight={500}>
-                  Wallet Address{' '}
+                  {account?.toUpperCase()}
                 </Text>
               </div>
             </Group>
+            {!isRegistered && (
+              <Button
+                onClick={async () => {
+                  await registerUser1(account);
+                  toast.success('Registered Successfully');
+                }}
+                size="md"
+                className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
+                styles={{
+                  root: { border: 'none' },
+                }}
+              >
+                Register
+              </Button>
+            )}
           </div>
         </div>
       </section>
-      {/* ToDo: Add a check to see if the user is registered or not */}
-      {1 && (
+      {isRegistered && (
         <section className="container w-[95%] backdrop-blur-md bg-opacity-10 rounded-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
           <div className="inline-flex items-end justify-between w-full space-x-5">
             <p className="text-4xl font-bold leading-10">Uploaded Items</p>
@@ -152,29 +194,28 @@ const dashboard = () => {
           </div>
           <div className="flex w-full gap-10 overflow-x-auto">
             <Draggable className={classes.draggable}>
-              <>
-                {userDetails &&
-                  userDetails['atomicDetails']?.map((image, id) => {
-                    return (
-                      <div className={classes.card} key={id}>
-                        <DisplayCard
-                          image={image}
-                          AssetType={image['AssetType']}
-                          Id={image['Id']}
-                          ItemType={image['ItemType']}
-                          Owner={image['Owner']}
-                          licenseIds={image['licenseIds']}
-                          metaData={image['metaData']}
-                        />
-                      </div>
-                    );
-                  })}
-              </>
+              {userDetails &&
+                userDetails['atomicDetails']?.map((image, id) => {
+                  return (
+                    <div className={classes.card} key={id}>
+                      <DisplayCard
+                        image={image}
+                        AssetType={image['AssetType']}
+                        Id={image['Id']}
+                        ItemType={image['ItemType']}
+                        Owner={image['Owner']}
+                        licenseIds={image['licenseIds']}
+                        metaData={image['metaData']}
+                      />
+                    </div>
+                  );
+                })}
             </Draggable>
           </div>
         </section>
       )}
-      {1 && (
+
+      {isRegistered && (
         <section className="container w-[95%] backdrop-blur-md bg-opacity-10 rounded-t-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
           <div className="inline-flex items-end justify-between w-full space-x-5">
             <p className="text-4xl font-bold leading-10">Purchased Licenses</p>
@@ -190,38 +231,32 @@ const dashboard = () => {
             </Button>
           </div>
           <div className="flex w-full gap-10 overflow-x-auto">
-            {/* <Draggable className={classes.draggable}>
-              <>
-                {[...Array(10)].map((image, id) => (
+            {purchases &&
+              purchases?.map((image, id) => {
+                return (
                   <div className={classes.card} key={id}>
-                    <DisplayCard image={image} />
+                    <DisplayCard
+                      image={image['deItemDetails']}
+                      AssetType={image['deItemDetails']['AssetType']}
+                      Id={image['deItemDetails']['Id']}
+                      ItemType={image['deItemDetails']['ItemType']}
+                      Owner={image['deItemDetails']['Owner']}
+                      licenseIds={image['deItemDetails']['licenseIds']}
+                      metaData={image['deItemDetails']['metaData']}
+                    />
                   </div>
-                ))}
-              </>
-            </Draggable> */}
+                );
+              })}
           </div>
         </section>
       )}
-      {1 && (
-        <section className="container w-[95%] backdrop-blur-md bg-opacity-10 rounded-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
-          <Button
-            onClick={() => registerUser1(account)}
-            size="md"
-            className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
-            styles={{
-              root: { border: 'none' },
-            }}
-          >
-            Register
-          </Button>
-        </section>
-      )}
-      {/* <Button onClick={() => setIsLicenceModalOpen(true)}>Licence</Button>
-      <Button onClick={() => setIsItemModalOpen(true)}>Deitem</Button> */}
+
       <NewItemForm
         isItemModalOpen={isItemModalOpen}
         setIsModalOpen={setIsItemModalOpen}
         createDeItem={createDeItem}
+        setRefetch={setRefetch}
+        refetch={refetch}
         // userDetails={userDetails}
       />
       <LicenceForm
@@ -229,6 +264,8 @@ const dashboard = () => {
         setIsLicenceModalOpen={setIsLicenceModalOpen}
         createLicence={createLicence}
         userDetails={userDetails}
+        refetch={refetch}
+        setRefetch={setRefetch}
       />
     </div>
   );

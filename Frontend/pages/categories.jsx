@@ -29,44 +29,13 @@ const categories = () => {
   const [vantaEffect, setVantaEffect] = useState(null);
   const [value, setValue] = useState('react');
   const { classes } = useStyles();
-  const [obj, setObj] = useState(null);
+  const [deItemsArray, setDeItemsArray] = useState([]);
   const [error, setError] = useState(null);
 
-  function getMetadata(res) {
-    res.map((item) => {
-      let metadata = item['deItemDetails']['metaData'];
-      let newMetaData = metadata.replace(
-        'ipfs://',
-        'https://cloudflare-ipfs.com/ipfs/'
-      );
-      fetch(newMetaData)
-        .then((res) => res.json())
-        .then((data) => {
-          let newImageLink = data.image.replace(
-            'ipfs://',
-            'https://cloudflare-ipfs.com/ipfs/'
-          );
-          let obj = {
-            AssetType: res['deItemDetails']['AssetType'],
-            Id: res['deItemDetails']['Id'],
-            ItemType: res['deItemDetails']['ItemType'],
-            Owner: res['deItemDetails']['Owner'],
-            licenseDetails: res['licenseDetails'],
-            purchaseDetails: res['purchaseDetails'],
-            collection: data['collection'],
-            description: data['description'],
-            image: newImageLink,
-            mediaType: data['mediaType'],
-            name: data['name'],
-          };
-          setObj(obj);
-        });
-    });
-  }
   function getAllMedia() {
     getAllAtomics().then((res) => {
       console.log('RES: ', res);
-      // getMetadata(res);
+      setDeItemsArray((prev) => [...prev, ...res]);
     });
   }
 
@@ -162,7 +131,6 @@ const categories = () => {
           </div>
           <div className="w-full flex justify-end">
             <Select
-              //   label="Sort By"
               placeholder="Sort By"
               data={[
                 { value: 'Price', label: 'Price' },
@@ -179,22 +147,44 @@ const categories = () => {
             </div>
             <div className="flex w-full gap-10 overflow-x-auto">
               <Draggable className={classes.draggable}>
-                <>
-                  {thumbnail.map((image, id) => (
-                    <div className={classes.card} key={id}>
-                      {/* <DisplayCard image={image} /> */}
-                    </div>
-                  ))}
-                </>
+                {deItemsArray &&
+                  deItemsArray?.map((image, id) => {
+                    if (image['Owner'].includes('0x0000000')) return null;
+                    return (
+                      <div className={classes.card} key={id}>
+                        <DisplayCard
+                          image={image}
+                          AssetType={image['AssetType']}
+                          Id={image['Id']}
+                          ItemType={image['ItemType']}
+                          Owner={image['Owner']}
+                          licenseIds={image['licenseIds']}
+                          metaData={image['metaData']}
+                        />
+                      </div>
+                    );
+                  })}
               </Draggable>
             </div>
           </section>
           <div className="grid grid-cols-4 place-content-center gap-10 w-full items-center">
-            {thumbnail.map((image, id) => (
-              <div className="mx-auto" key={id}>
-                {/* <DisplayCard image={image} /> */}
-              </div>
-            ))}
+            {deItemsArray &&
+              deItemsArray?.map((image, id) => {
+                if (image['Owner'].includes('0x0000000')) return null;
+                return (
+                  <div className={classes.card} key={id}>
+                    <DisplayCard
+                      image={image}
+                      AssetType={image['AssetType']}
+                      Id={image['Id']}
+                      ItemType={image['ItemType']}
+                      Owner={image['Owner']}
+                      licenseIds={image['licenseIds']}
+                      metaData={image['metaData']}
+                    />
+                  </div>
+                );
+              })}
           </div>
         </div>
       </section>

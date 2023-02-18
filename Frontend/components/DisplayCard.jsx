@@ -15,7 +15,6 @@ const DisplayCard = ({
 }) => {
   const [cardImage, SetcardImage] = useAtom(mediaInfoAtom);
   const [obj, setObj] = useState(null);
-  console.log('Meatadata: ', metaData);
   useEffect(() => {
     let newMetaData = metaData.replace(
       'ipfs://',
@@ -25,12 +24,10 @@ const DisplayCard = ({
     fetch(newMetaData)
       .then((res) => res.json())
       .then((data) => {
-        console.log('data', data);
         let newImageLink = data.image.replace(
           'ipfs://',
           'https://cloudflare-ipfs.com/ipfs/'
         );
-        console.log('newImageLink', newImageLink);
         let obj = {
           AssetType: AssetType,
           Id: Id,
@@ -49,10 +46,6 @@ const DisplayCard = ({
         SetcardImage([...cardImage, obj]);
       });
   }, []);
-  // print cardImage
-  useEffect(() => {
-    console.log('cardImage', cardImage);
-  }, [cardImage]);
 
   return (
     <div className="inline-flex shrink-0 flex-col space-y-5 select-none items-start justify-start w-80 px-5 py-8 border-2 rounded-2xl border-gray-400">
@@ -64,28 +57,19 @@ const DisplayCard = ({
             background: ` linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0) 73.23%, #000000 100%) , url(${obj?.image}) center center/cover no-repeat fixed`,
           }}
         >
-          {/* <div className="w-full h-auto">
-            <img loading="lazy" src={`${obj?.image}`} alt="" />
-          </div> */}
           <div className="flex  items-center justify-between w-full">
             <div className="flex space-x-2.5 items-center justify-start w-full">
               <img
                 className="w-10 h-10 border rounded-full border-gray-50"
-                src="https://via.placeholder.com/40x40"
+                src={`https://api.dicebear.com/5.x/pixel-art/svg?seed=${obj?.Owner.toUpperCase()}&options[mood][]=happy`}
               />
               <div className="inline-flex flex-col space-y-0.5 items-start justify-between h-full py-0.5">
                 <p className="text-xs font-medium leading-none text-gray-400">
                   Created by
                 </p>
                 <p className="text-base font-bold leading-tight text-gray-50">
+                  {obj?.Owner?.slice(0, 4)} ...{' '}
                   {obj?.Owner?.slice(
-                    // first 6 characters
-                    0,
-                    4
-                  )}{' '}
-                  ...{' '}
-                  {obj?.Owner?.slice(
-                    // last 4 characters
                     obj?.Owner?.length - 4,
                     obj?.Owner?.length
                   )}
@@ -102,9 +86,9 @@ const DisplayCard = ({
             {obj?.name}
           </p>
           <div className="inline-flex space-x-1 py-2 items-start justify-start w-full">
-            {obj?.tags?.map((tag) => (
-              <Badge color="gray" variant="outline">
-                {tag}
+            {obj?.tags?.map((tag, id) => (
+              <Badge color="gray" variant="outline" key={id}>
+                {tag.slice(0, 4)}
               </Badge>
             ))}
           </div>

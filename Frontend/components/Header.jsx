@@ -10,8 +10,6 @@ import { Button } from '@mantine/core';
 const Header = () => {
   const [Account, setAccount] = useState(null);
 
-  // console.log('account: ', Account);
-
   return (
     <div className="flex flex-col">
       <nav className="flex w-screen fixed top-0 p-5  z-10">

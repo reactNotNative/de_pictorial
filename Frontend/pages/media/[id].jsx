@@ -4,12 +4,9 @@ import { AiOutlineHeart } from 'react-icons/ai';
 import FOG from 'vanta/dist/vanta.fog.min.js';
 import SubscriptionLabel from './../../components/SubscriptionLabel';
 import { useRouter } from 'next/router';
-import {
-  getContract,
-  getAllLicences,
-  getUserDetails,
-  getDeItemById,
-} from '../../utilities/contractfunctions';
+import { getDeItemById } from '../../utilities/contractfunctions';
+import { toast } from 'react-hot-toast';
+
 const index = () => {
   const [vantaEffect, setVantaEffect] = useState(null);
   const [error, setError] = useState(null);
@@ -57,10 +54,15 @@ const index = () => {
           image: newImageLink,
           mediaType: data['mediaType'],
           name: data['name'],
+          tags: data['tags'],
         };
+
         setObj(obj);
       });
   }
+  useEffect(() => {
+    console.log('obj: ', obj);
+  }, [obj]);
 
   useEffect(() => {
     if (!vantaEffect) {
@@ -108,11 +110,16 @@ const index = () => {
                   <AiOutlineHeart size="24" className="text-white" />
                 </div>
                 <div className="inline-flex gap-2 items-start justify-start w-40">
-                  {obj?.tags?.map((tag) => (
-                    <Badge color="gray" variant="outline">
-                      {tag}
-                    </Badge>
-                  ))}
+                  {obj?.tags?.map((tag, id) => {
+                    return (
+                      <Badge color="gray" variant="outline" key={id}>
+                        {tag}
+                      </Badge>
+                    );
+                  })}
+                  <Badge color="gray" variant="outline" key={id}>
+                    {obj?.mediaType}
+                  </Badge>
                 </div>
               </div>
             </div>
@@ -128,21 +135,15 @@ const index = () => {
               <div className="flex space-x-2.5 items-center justify-start">
                 <img
                   className="w-10 h-10 border rounded-full border-gray-300"
-                  src="https://via.placeholder.com/40x40"
+                  src={`https://api.dicebear.com/5.x/pixel-art/svg?seed=${obj?.Owner?.toUpperCase()}&options[mood][]=happy`}
                 />
                 <div className="inline-flex flex-col space-y-0.5 items-start justify-between h-full py-0.5">
                   <p className="text-xs font-medium leading-none text-gray-400">
                     Created by
                   </p>
                   <p className="text-base font-bold leading-tight text-gray-300">
+                    {obj?.Owner?.slice(0, 4)} ...{' '}
                     {obj?.Owner?.slice(
-                      // first 6 characters
-                      0,
-                      4
-                    )}{' '}
-                    ...{' '}
-                    {obj?.Owner?.slice(
-                      // last 4 characters
                       obj?.Owner?.length - 4,
                       obj?.Owner?.length
                     )}
@@ -159,8 +160,51 @@ const index = () => {
               </div>
             </div>
           </div>
+          {obj?.['purchaseDetails'] &&
+            obj['purchaseDetails'].map((purchase, id) => {
+              if (purchase['Buyer'].includes('0x0000000')) return null;
+              return (
+                <div
+                  className="inline-flex space-x-5 items-start justify-between w-full"
+                  key={id}
+                >
+                  <div className="flex space-x-2.5 items-center justify-start">
+                    <img
+                      className="w-10 h-10 border rounded-full border-gray-300"
+                      src={`https://api.dicebear.com/5.x/pixel-art/svg?seed=${obj?.Buyer?.toUpperCase()}&options[mood][]=happy`}
+                    />
+                    <div className="inline-flex flex-col space-y-0.5 items-start justify-between h-full py-0.5">
+                      <p className="text-xs font-medium leading-none text-gray-400">
+                        Purchased by
+                      </p>
+                      <p className="text-base font-bold leading-tight text-gray-300">
+                        {purchase['Buyer'].slice(0, 4)} ...{' '}
+                        {purchase['Buyer'].slice(
+                          purchase['Buyer'].length - 4,
+                          purchase['Buyer'].length
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+
           <div className="inline-flex w-full">
-            <SubscriptionLabel />
+            {obj?.['licenseDetails'].map((license, idd) => {
+              return (
+                <div
+                  className="inline-flex flex-col space-y-2 items-start justify-start w-1/2"
+                  key={idd}
+                >
+                  <SubscriptionLabel
+                    license={license}
+                    AssetType={obj?.AssetType}
+                    Id={obj?.Id}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

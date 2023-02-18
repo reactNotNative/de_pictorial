@@ -11,6 +11,7 @@ import {
 } from '@mantine/core';
 import React, { useState } from 'react';
 import { NFTStorage } from 'nft.storage';
+import { toast } from 'react-hot-toast';
 
 const LicenceForm = ({
   isLicenceModalOpen,
@@ -34,8 +35,6 @@ const LicenceForm = ({
     e.preventDefault();
     setLoading(true);
     try {
-      // defaultToast('Uploading Image...');
-
       const client = new NFTStorage({
         token: process.env.NEXT_PUBLIC_NFT_STORAGE,
       });
@@ -46,7 +45,7 @@ const LicenceForm = ({
         licenceType: formData.licenceType,
         duration: formData.duration,
       });
-
+      toast.success('Uploaded Metadata');
       deLicence(metadata, formData);
     } catch (err) {
       setLoading(false);
@@ -60,6 +59,7 @@ const LicenceForm = ({
       await createLicence(formData.price, formData.duration, metadata);
       setLoading(false);
       setIsLicenceModalOpen(false);
+      toast.success('Licence Created');
     } catch (err) {
       console.log(err['error']['data']['message']);
       toast.error('Failed to create licence. Please try again later.');

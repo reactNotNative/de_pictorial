@@ -510,33 +510,28 @@ contract Depictorial is ReentrancyGuard {
         for (uint256 i = 0; i < 5; i++) {
             licenseIds[i] = i + 1;
         }
-        // create 5 licenses with incrementing price and incrementing timestamp
+        createLicense(
+            (1) * 1000000000000000000,
+            timestamp + (1 * 10 days),
+            '{"name":"Standard License","description":"Licence with standard perks","licenceType":"Paid"}'
+        );
 
-        for (uint256 i = 0; i < 5; i++) {
-            createLicense(
-                (i + 1) * 1000000000000000000,
-                timestamp + i,
-                '{"name":"1","description":"qweqweqweqweqwe","licenceType":"Paid"}'
-            );
-        }
-        // create 5 atomics
-        for (uint256 i = 0; i < 5; i++) {
-            createDeItem(
-                Type.Atomic,
-                DeItemType.Photo,
-                licenseIds,
-                "ipfs://bafyreihe2imleb7ayp64boy6rio2f3fwicrd4fto723xd6f3pgf4c2gpbm/metadata.json"
-            );
-        }
-        // create 5 collections
-        for (uint256 i = 0; i < 5; i++) {
-            createDeItem(
-                Type.Collection,
-                DeItemType.Photo,
-                licenseIds,
-                "Collection 1"
-            );
-        }
+        createLicense(
+            (2) * 1000000000000000000,
+            timestamp + (1 * 20 days),
+            '{"name":"Preminum Licence","description":" License with Premium Perks ","licenceType":"Paid"}'
+        );
+
+        createLicense(
+            (3) * 1000000000000000000,
+            timestamp + (1 * 30 days),
+            '{"name":"Exclusive Licence","description":" License with Exclusive Perks ","licenceType":"Paid"}'
+        );
+        createLicense(
+            (4) * 1000000000000000000,
+            timestamp + (1 * 60 days),
+            '{"name":"VIP Licence","description":" License with VIP Perks ","licenceType":"Paid"}'
+        );
     }
 
     // get all atomics in the platform

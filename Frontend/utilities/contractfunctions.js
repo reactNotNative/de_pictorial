@@ -65,9 +65,11 @@ export async function createDeItem(
 }
 
 // buydeitem
-export async function buyDeItem(_licenseId, _deItemId, _assetType) {
+export async function buyDeItem(_licenseId, _deItemId, _assetType, price) {
   let contract = getContract();
-  let tx = await contract.buyDeItem(_licenseId, _deItemId, _assetType);
+  let tx = await contract.buyDeItem(_licenseId, _deItemId, _assetType, {
+    value: ethers.BigNumber.from(price),
+  });
   let receipt = await tx.wait();
   return receipt;
 }

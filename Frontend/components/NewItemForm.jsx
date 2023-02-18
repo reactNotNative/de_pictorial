@@ -15,7 +15,13 @@ import { NFTStorage } from 'nft.storage';
 import { userDataAtom } from '../store/global';
 import { useAtom } from 'jotai';
 import { toast } from 'react-hot-toast';
-const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
+const NewItemForm = ({
+  isItemModalOpen,
+  setIsModalOpen,
+  createDeItem,
+  setRefetch,
+  refetch,
+}) => {
   const [userDetails, setUserDetails] = useAtom(userDataAtom);
 
   const [formData, setFormData] = useState({
@@ -91,6 +97,7 @@ const NewItemForm = ({ isItemModalOpen, setIsModalOpen, createDeItem }) => {
       );
       setLoading(false);
       setIsModalOpen(false);
+      setRefetch(!refetch);
       toast.success('Media Added to Chain!');
     } catch (err) {
       toast.error('Some Error Occured');
