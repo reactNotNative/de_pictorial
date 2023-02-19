@@ -1,24 +1,24 @@
-import { useState, useEffect } from 'react';
-import jwt_decode from 'jwt-decode';
+import { useState, useEffect } from "react";
+import jwt_decode from "jwt-decode";
 // import './App.css';
-import { pascalStrToSpacedWord } from './helper.js';
-import FormComponent from './FormComponent.jsx';
+import { pascalStrToSpacedWord } from "./helper.js";
+import FormComponent from "./FormComponent.jsx";
 
-function Form() {
+function Form({ LicenseData = false }) {
   const [token, setToken] = useState(null);
   const [schema, setSchema] = useState(null);
   const [schemaLink, setClaimLink] = useState(null);
 
   useEffect(() => {
-    fetch('https://api-staging.polygonid.com/v1/orgs/sign-in', {
-      method: 'POST',
+    fetch("https://api-staging.polygonid.com/v1/orgs/sign-in", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Accept-Encoding': 'application/json',
+        "Content-Type": "application/json",
+        "Accept-Encoding": "application/json",
       },
       body: JSON.stringify({
-        email: 'samyakjainking@gmail.com',
-        password: 'Saakshi@123',
+        email: "samyakjainking@gmail.com",
+        password: "Saakshi@123",
       }),
     })
       .then((response) => response.json())
@@ -35,10 +35,10 @@ function Form() {
       })
       .then(({ token, tempSchemaLink }) => {
         fetch(tempSchemaLink, {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Content-Type': 'application/json',
-            'Accept-Encoding': 'application/json',
+            "Content-Type": "application/json",
+            "Accept-Encoding": "application/json",
             Authorization: `Bearer ${token}`,
           },
         })
@@ -49,17 +49,17 @@ function Form() {
 
   const handleResults = (results) => {
     fetch(schemaLink, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Accept-Encoding': 'application/json',
+        "Content-Type": "application/json",
+        "Accept-Encoding": "application/json",
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         attributes: Object.keys(results).map((k) => {
-          const removeDashes = results[k].indexOf('-') !== 0;
+          const removeDashes = results[k].indexOf("-") !== 0;
           const val = removeDashes
-            ? results[k].replaceAll('-', '')
+            ? results[k].replaceAll("-", "")
             : results[k];
           return {
             attributeKey: k,
@@ -72,7 +72,7 @@ function Form() {
       .then(({ id }) => {
         window.open(
           `https://platform-test.polygonid.com/claim-link/${id}`,
-          '_newtab'
+          "_newtab"
         );
       });
   };
@@ -80,8 +80,9 @@ function Form() {
   return !!schema ? (
     <>
       <div w="xl" p={10} background="rgba(255,255,255,.90)">
-        <h1 mb={5}>Claim {pascalStrToSpacedWord(schema.schema)}</h1>
+        <h1 mb={5}>Create airdrop</h1>
         <FormComponent
+          LicenseData={LicenseData}
           fieldInfo={schema?.attributes}
           passBackResults={handleResults}
         />
