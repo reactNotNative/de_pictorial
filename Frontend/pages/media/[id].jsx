@@ -26,6 +26,7 @@ const index = () => {
         getMetadata(res);
       });
     } catch (err) {
+      toast.error(` Error getting media details: ${err['reason']} `);
       setError(err);
     }
   }
@@ -105,7 +106,7 @@ const index = () => {
               <div className="inline-flex flex-col space-y-0.5 items-start justify-start flex-1 h-full w-full">
                 <div className="inline-flex space-x-2.5 items-center justify-between w-full">
                   <p className="text-2xl font-bold leading-loose text-gray-300">
-                    {obj?.name}
+                    {obj?.name} # {obj?.Id.toNumber()}
                   </p>
                   <AiOutlineHeart size="24" className="text-white" />
                 </div>
@@ -149,14 +150,6 @@ const index = () => {
                     )}
                   </p>
                 </div>
-              </div>
-              <div className="inline-flex flex-col items-end justify-end h-full py-0.5">
-                <p className="text-xs leading-none text-gray-400">
-                  Published on
-                </p>
-                <p className="text-xs font-medium leading-none text-right text-gray-300">
-                  31-12-2023
-                </p>
               </div>
             </div>
           </div>

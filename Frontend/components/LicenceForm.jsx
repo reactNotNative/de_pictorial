@@ -3,14 +3,13 @@ import {
   Modal,
   NumberInput,
   Radio,
-  SegmentedControl,
-  Switch,
   TextInput,
   Textarea,
   LoadingOverlay,
 } from '@mantine/core';
+import { DatePicker } from '@mantine/dates';
+import dayjs from 'dayjs';
 import React, { useState } from 'react';
-import { NFTStorage } from 'nft.storage';
 import { toast } from 'react-hot-toast';
 
 const LicenceForm = ({
@@ -21,11 +20,12 @@ const LicenceForm = ({
 }) => {
   const [formData, setFormData] = useState({
     title: null,
-    duration: 12,
+    duration: new Date(),
     description: '',
     price: 0,
     licenceType: 'Paid',
   });
+  console.log('formData:', formData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   async function handelSubmit(e) {
@@ -35,10 +35,6 @@ const LicenceForm = ({
     e.preventDefault();
     setLoading(true);
     try {
-      const client = new NFTStorage({
-        token: process.env.NEXT_PUBLIC_NFT_STORAGE,
-      });
-
       const metadata = JSON.stringify({
         name: formData.title,
         description: formData.description,
@@ -55,17 +51,19 @@ const LicenceForm = ({
   }
 
   async function deLicence(metadata, formData) {
+    let diff = dayjs(formData.duration).diff(dayjs(), 'days');
+    console.log('diff:', diff);
     try {
-      await createLicence(formData.price, formData.duration, metadata);
+      await createLicence(formData.price, diff, metadata);
       setLoading(false);
       setIsLicenceModalOpen(false);
       toast.success('Licence Created');
     } catch (err) {
-      console.log(err['error']['data']['message']);
+      console.log(err);
       toast.error('Failed to create licence. Please try again later.');
 
       setLoading(false);
-      setError(err['error']['data']['message']);
+      // setError(err['error']['data']['message']);
     }
   }
   return (
@@ -100,6 +98,7 @@ const LicenceForm = ({
           label="Title"
           placeholder="Enter Title"
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          withAsterisk
         />
         <div className="flex w-full grow">
           <Radio.Group
@@ -140,7 +139,7 @@ const LicenceForm = ({
               label="Paid"
             />
           </Radio.Group>
-          <NumberInput
+          <DatePicker
             styles={{
               input: {
                 '&:focus': {
@@ -154,9 +153,17 @@ const LicenceForm = ({
             className="w-2/3"
             defaultValue={12}
             value={formData.duration}
-            onChange={(val) => setFormData({ ...formData, duration: val })}
-            placeholder="Duration in months"
-            label="Duration (Months)"
+            onChange={(val) => {
+              if (val.getDate() < new Date().getDate()) {
+                toast.error('End date cannot be in the past');
+                return;
+              }
+
+              setFormData({ ...formData, duration: val });
+            }}
+            placeholder="Duration"
+            label="Duration of Licence"
+            withAsterisk
           />
         </div>
         <NumberInput
@@ -173,8 +180,9 @@ const LicenceForm = ({
           disabled={formData.licenceType === 'Free'}
           value={formData.price}
           onChange={(val) => setFormData({ ...formData, price: val })}
-          placeholder="Price in USD"
+          placeholder="Price in Matic"
           label="Price of Licence"
+          withAsterisk
         />
         <Textarea
           label="Description"

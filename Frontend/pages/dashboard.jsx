@@ -6,6 +6,8 @@ import NewItemForm from '../components/NewItemForm';
 import LicenceForm from '../components/LicenceForm';
 import Draggable from '../components/Draggable';
 import DisplayCard from './../components/DisplayCard';
+import SubscriptionLabel from './../components/SubscriptionLabel';
+
 import { Button } from '@mantine/core';
 import {
   getContract,
@@ -18,7 +20,7 @@ import {
 } from '../utilities/contractfunctions';
 import { isModalOpenAtom, userDataAtom } from '../store/global';
 import { useAtom } from 'jotai';
-import { ethers } from 'ethers';
+import { providers } from 'ethers';
 import { toast } from 'react-hot-toast';
 const dashboard = () => {
   const myRef = useRef(null);
@@ -58,7 +60,7 @@ const dashboard = () => {
 
     if (accounts.length !== 0) {
       const account = accounts[0];
-      let provider = new ethers.providers.Web3Provider(window.ethereum);
+      let provider = new providers.Web3Provider(window.ethereum);
       let network = await provider.getNetwork();
       setAccount(account);
       if (network.name !== 'maticmum') {
@@ -72,19 +74,16 @@ const dashboard = () => {
   };
   function getPurchases(res) {
     let purchases = [];
-    if (1) {
-      for (let i = 0; i < res['purchaseDetails'].length; i++) {
-        purchases.push(
-          getDeItemById(
-            res['purchaseDetails'][i]['DeItemId'].toNumber(),
-            0
-          ).then((res) => {
-            console.log('Purchases:', res);
+    for (let i = 0; i < res['purchaseDetails'].length; i++) {
+      purchases.push(
+        getDeItemById(res['purchaseDetails'][i]['DeItemId'].toNumber(), 0).then(
+          (res) => {
+            // console.log('Purchases:', res);
             setPurchases((prev) => [...prev, res]);
             return res;
-          })
-        );
-      }
+          }
+        )
+      );
     }
     return purchases;
   }
@@ -162,8 +161,13 @@ const dashboard = () => {
             {!isRegistered && (
               <Button
                 onClick={async () => {
-                  await registerUser1(account);
-                  toast.success('Registered Successfully');
+                  try {
+                    await registerUser1(account);
+                    setRefetch(!refetch);
+                    toast.success('Registered Successfully');
+                  } catch (err) {
+                    toast.error(err['reason']);
+                  }
                 }}
                 size="md"
                 className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
@@ -173,6 +177,25 @@ const dashboard = () => {
               >
                 Register
               </Button>
+            )}
+
+            {isRegistered && (
+              <div className="inline-flex w-full">
+                {userDetails?.['licenseDetails'].map((license, idd) => {
+                  return (
+                    <div
+                      className="inline-flex flex-col space-y-2 items-start justify-start w-1/2"
+                      key={idd}
+                    >
+                      <SubscriptionLabel
+                        license={license}
+                        AssetType={-1}
+                        Id={-1}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             )}
           </div>
         </div>

@@ -43,6 +43,8 @@ const categories = () => {
     try {
       getAllMedia();
     } catch (err) {
+      toast.error(err['reason']);
+
       setError(err);
     }
   }, []);

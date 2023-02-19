@@ -11,7 +11,7 @@ import { FaEthereum } from 'react-icons/fa';
 import { buyDeItem } from '../utilities/contractfunctions';
 import { Button } from '@mantine/core';
 import { toast } from 'react-hot-toast';
-
+import { utils } from 'ethers';
 const useStyles = createStyles((theme) => ({
   root: {
     padding: theme.spacing.xl * 1.5,
@@ -26,16 +26,12 @@ function SubscriptionLabel({ license, AssetType, Id }) {
   const [licenseState, setLicense] = useState({});
 
   const { classes } = useStyles();
-  function buy() {
+  async function buy() {
     try {
-      buyDeItem(license['Id'], Id, AssetType, licenseState['Price']).then(
-        (res) => {
-          toast.success('Item bought!');
-        }
-      );
+      await buyDeItem(license['Id'], Id, AssetType, license['Price']);
+      toast.success(`Item bought`);
     } catch (err) {
-      console.log('err:', err);
-      toast.error(`Error buying item`);
+      toast.error(`Error buying item ${err['reason']} `);
     }
   }
   useEffect(() => {
@@ -47,6 +43,9 @@ function SubscriptionLabel({ license, AssetType, Id }) {
     };
     setLicense(licenseObj);
   }, []);
+  useEffect(() => {
+    console.log('licenseState:', licenseState);
+  }, [licenseState]);
 
   const DiffIcon = FaEthereum;
 
@@ -71,10 +70,12 @@ function SubscriptionLabel({ license, AssetType, Id }) {
               {licenseState['metaData'] && licenseState['metaData']['name']}
               {' - '}
               {licenseState['metaData'] &&
-                licenseState['metaData']['duration'] + ' Months'}
+                licenseState['duration'] + ' Days Left'}
             </Text>
             <Text weight={700} size="lg">
-              {licenseState['metaData'] && licenseState['metaData']['price']}
+              {licenseState['price'] &&
+                utils.formatEther(licenseState['price'])}{' '}
+              MATIC
             </Text>
           </div>
           <div>
@@ -87,19 +88,21 @@ function SubscriptionLabel({ license, AssetType, Id }) {
               {licenseState['Price'] && licenseState['Price'].toNumber()}
             </Text>
           </div>
-          <Button
-            onClick={() => buy()}
-            size="md"
-            className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
-            styles={{
-              root: { border: 'none' },
-            }}
-          >
-            <ThemeIcon color="gray" variant="light" size={38} radius="md">
-              <DiffIcon size={28} stroke={1.5} />
-            </ThemeIcon>
-            Buy
-          </Button>
+          {AssetType != -1 && Id != -1 && (
+            <Button
+              onClick={() => buy()}
+              size="md"
+              className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
+              styles={{
+                root: { border: 'none' },
+              }}
+            >
+              <ThemeIcon color="gray" variant="light" size={38} radius="md">
+                <DiffIcon size={28} stroke={1.5} />
+              </ThemeIcon>
+              Buy
+            </Button>
+          )}
         </Group>
       </Paper>
     </div>

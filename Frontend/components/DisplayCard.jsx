@@ -83,7 +83,7 @@ const DisplayCard = ({
       <div className="inline-flex  items-center justify-between w-full">
         <div className="inline-flex flex-col space-y-0.5 items-start justify-start h-full">
           <p className="text-base font-bold leading-tight text-white">
-            {obj?.name}
+            {obj?.name} # {obj?.Id.toNumber()}
           </p>
           <div className="inline-flex space-x-1 py-2 items-start justify-start w-full">
             {obj?.tags?.map((tag, id) => (
