@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Badge, Button } from '@mantine/core';
-import { AiOutlineHeart } from 'react-icons/ai';
-import FOG from 'vanta/dist/vanta.fog.min.js';
-import SubscriptionLabel from './../../components/SubscriptionLabel';
-import { useRouter } from 'next/router';
-import { getDeItemById } from '../../utilities/contractfunctions';
-import { toast } from 'react-hot-toast';
+import React, { useState, useEffect, useRef } from "react";
+import { Badge, Button } from "@mantine/core";
+import { AiOutlineHeart } from "react-icons/ai";
+import FOG from "vanta/dist/vanta.fog.min.js";
+import SubscriptionLabel from "./../../components/SubscriptionLabel";
+import { useRouter } from "next/router";
+import { getDeItemById } from "../../utilities/contractfunctions";
+import { toast } from "react-hot-toast";
 
 const index = () => {
   const [vantaEffect, setVantaEffect] = useState(null);
@@ -26,43 +26,43 @@ const index = () => {
         getMetadata(res);
       });
     } catch (err) {
-      toast.error(` Error getting media details: ${err['reason']} `);
+      toast.error(` Error getting media details: ${err["reason"]} `);
       setError(err);
     }
   }
   function getMetadata(res) {
-    let metadata = res['deItemDetails']['metaData'];
+    let metadata = res["deItemDetails"]["metaData"];
     let newMetaData = metadata.replace(
-      'ipfs://',
-      'https://cloudflare-ipfs.com/ipfs/'
+      "ipfs://",
+      "https://cloudflare-ipfs.com/ipfs/"
     );
     fetch(newMetaData)
       .then((res) => res.json())
       .then((data) => {
         let newImageLink = data.image.replace(
-          'ipfs://',
-          'https://cloudflare-ipfs.com/ipfs/'
+          "ipfs://",
+          "https://cloudflare-ipfs.com/ipfs/"
         );
         let obj = {
-          AssetType: res['deItemDetails']['AssetType'],
-          Id: res['deItemDetails']['Id'],
-          ItemType: res['deItemDetails']['ItemType'],
-          Owner: res['deItemDetails']['Owner'],
-          licenseDetails: res['licenseDetails'],
-          purchaseDetails: res['purchaseDetails'],
-          collection: data['collection'],
-          description: data['description'],
+          AssetType: res["deItemDetails"]["AssetType"],
+          Id: res["deItemDetails"]["Id"],
+          ItemType: res["deItemDetails"]["ItemType"],
+          Owner: res["deItemDetails"]["Owner"],
+          licenseDetails: res["licenseDetails"],
+          purchaseDetails: res["purchaseDetails"],
+          collection: data["collection"],
+          description: data["description"],
           image: newImageLink,
-          mediaType: data['mediaType'],
-          name: data['name'],
-          tags: data['tags'],
+          mediaType: data["mediaType"],
+          name: data["name"],
+          tags: data["tags"],
         };
 
         setObj(obj);
       });
   }
   useEffect(() => {
-    console.log('obj: ', obj);
+    console.log("obj: ", obj);
   }, [obj]);
 
   useEffect(() => {
@@ -110,7 +110,7 @@ const index = () => {
                   </p>
                   <AiOutlineHeart size="24" className="text-white" />
                 </div>
-                <div className="inline-flex gap-2 items-start justify-start w-40">
+                <div className="inline-flex gap-2 items-start justify-start w-full">
                   {obj?.tags?.map((tag, id) => {
                     return (
                       <Badge color="gray" variant="outline" key={id}>
@@ -143,7 +143,7 @@ const index = () => {
                     Created by
                   </p>
                   <p className="text-base font-bold leading-tight text-gray-300">
-                    {obj?.Owner?.slice(0, 4)} ...{' '}
+                    {obj?.Owner?.slice(0, 4)} ...{" "}
                     {obj?.Owner?.slice(
                       obj?.Owner?.length - 4,
                       obj?.Owner?.length
@@ -153,9 +153,9 @@ const index = () => {
               </div>
             </div>
           </div>
-          {obj?.['purchaseDetails'] &&
-            obj['purchaseDetails'].map((purchase, id) => {
-              if (purchase['Buyer'].includes('0x0000000')) return null;
+          {obj?.["purchaseDetails"] &&
+            obj["purchaseDetails"].map((purchase, id) => {
+              if (purchase["Buyer"].includes("0x0000000")) return null;
               return (
                 <div
                   className="inline-flex space-x-5 items-start justify-between w-full"
@@ -171,10 +171,10 @@ const index = () => {
                         Purchased by
                       </p>
                       <p className="text-base font-bold leading-tight text-gray-300">
-                        {purchase['Buyer'].slice(0, 4)} ...{' '}
-                        {purchase['Buyer'].slice(
-                          purchase['Buyer'].length - 4,
-                          purchase['Buyer'].length
+                        {purchase["Buyer"].slice(0, 4)} ...{" "}
+                        {purchase["Buyer"].slice(
+                          purchase["Buyer"].length - 4,
+                          purchase["Buyer"].length
                         )}
                       </p>
                     </div>
@@ -183,19 +183,14 @@ const index = () => {
               );
             })}
 
-          <div className="inline-flex w-full">
-            {obj?.['licenseDetails'].map((license, idd) => {
+          <div className="inline-flex w-full flex-wrap justify-evenly gap-4">
+            {obj?.["licenseDetails"].map((license, idd) => {
               return (
-                <div
-                  className="inline-flex flex-col space-y-2 items-start justify-start w-1/2"
-                  key={idd}
-                >
-                  <SubscriptionLabel
-                    license={license}
-                    AssetType={obj?.AssetType}
-                    Id={obj?.Id}
-                  />
-                </div>
+                <SubscriptionLabel
+                  license={license}
+                  AssetType={obj?.AssetType}
+                  Id={obj?.Id}
+                />
               );
             })}
           </div>
