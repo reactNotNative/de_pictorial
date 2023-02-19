@@ -109,20 +109,19 @@ const DisplayCard = ({
           View Media
         </Button>
       </div>
-      <Button
-        onClick={() => setOpened(true)}
-        size="md"
-        color="dark"
-        styles={{
-          root: { border: "none", width: "100%" },
-        }}
-      >
-        Airdrop
-      </Button>
-      <Modal
-        opened={opened}
-        onClose={() => setOpened(false)}
-      >
+      {isOwner && (
+        <Button
+          onClick={() => setOpened(true)}
+          size="md"
+          color="dark"
+          styles={{
+            root: { border: "none", width: "100%" },
+          }}
+        >
+          Airdrop
+        </Button>
+      )}
+      <Modal opened={opened} onClose={() => setOpened(false)}>
         <Form LicenseData={LicenseData} />
       </Modal>
     </div>
