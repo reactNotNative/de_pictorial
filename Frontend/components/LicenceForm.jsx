@@ -11,6 +11,7 @@ import { DatePicker } from '@mantine/dates';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { ethers } from 'ethers';
 
 const LicenceForm = ({
   isLicenceModalOpen,
@@ -54,7 +55,15 @@ const LicenceForm = ({
     let diff = dayjs(formData.duration).diff(dayjs(), 'days');
     console.log('diff:', diff);
     try {
-      await createLicence(formData.price, diff, metadata);
+      await createLicence(
+        // convert ether  formData.price to wei
+        ethers.utils.parseUnits(
+          formData.price ? formData.price.toString() : '0',
+          'ether'
+        ),
+        diff,
+        metadata
+      );
       setLoading(false);
       setIsLicenceModalOpen(false);
       toast.success('Licence Created');
@@ -154,7 +163,8 @@ const LicenceForm = ({
             defaultValue={12}
             value={formData.duration}
             onChange={(val) => {
-              if (val.getDate() < new Date().getDate()) {
+              console.log('val:', val);
+              if (val < new Date()) {
                 toast.error('End date cannot be in the past');
                 return;
               }
@@ -166,7 +176,7 @@ const LicenceForm = ({
             withAsterisk
           />
         </div>
-        <NumberInput
+        <TextInput
           styles={{
             input: {
               '&:focus': {
@@ -179,7 +189,9 @@ const LicenceForm = ({
           }}
           disabled={formData.licenceType === 'Free'}
           value={formData.price}
-          onChange={(val) => setFormData({ ...formData, price: val })}
+          onChange={(e) => {
+            setFormData({ ...formData, price: e.target.value });
+          }}
           placeholder="Price in Matic"
           label="Price of Licence"
           withAsterisk

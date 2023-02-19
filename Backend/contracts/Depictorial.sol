@@ -507,31 +507,32 @@ contract Depictorial is ReentrancyGuard {
         // make a array of 5 licenseIds
         uint256[] memory licenseIds = new uint256[](5);
         // init the array with the licenseIds
-        for (uint256 i = 0; i < 5; i++) {
-            licenseIds[i] = i + 1;
-        }
-        createLicense(
-            (1) * 1000000000000000000,
-            timestamp + (1 * 10 days),
-            '{"name":"Standard License","description":"Licence with standard perks","licenceType":"Paid"}'
-        );
+        // for (uint256 i = 0; i < 5; i++) {
+        //     licenseIds[i] = i + 1;
+        // }
+        //     createLicense(
+        //         (1) * 1000000000000000000,
+        //         timestamp + (1 * 10 days),
+        //         '{"name":"Standard License","description":"Licence with standard perks","licenceType":"Paid"}'
+        //     );
 
-        createLicense(
-            (2) * 1000000000000000000,
-            timestamp + (1 * 20 days),
-            '{"name":"Preminum Licence","description":" License with Premium Perks ","licenceType":"Paid"}'
-        );
+        //     createLicense(
+        //         (2) * 1000000000000000000,
+        //         timestamp + (1 * 20 days),
+        //         '{"name":"Preminum Licence","description":" License with Premium Perks ","licenceType":"Paid"}'
+        //     );
 
-        createLicense(
-            (3) * 1000000000000000000,
-            timestamp + (1 * 30 days),
-            '{"name":"Exclusive Licence","description":" License with Exclusive Perks ","licenceType":"Paid"}'
-        );
-        createLicense(
-            (4) * 1000000000000000000,
-            timestamp + (1 * 60 days),
-            '{"name":"VIP Licence","description":" License with VIP Perks ","licenceType":"Paid"}'
-        );
+        //     createLicense(
+        //         (3) * 1000000000000000000,
+        //         timestamp + (1 * 30 days),
+        //         '{"name":"Exclusive Licence","description":" License with Exclusive Perks ","licenceType":"Paid"}'
+        //     );
+        //     createLicense(
+        //         (4) * 1000000000000000000,
+        //         timestamp + (1 * 60 days),
+        //         '{"name":"VIP Licence","description":" License with VIP Perks ","licenceType":"Paid"}'
+        //     );
+        // }
     }
 
     // get all atomics in the platform

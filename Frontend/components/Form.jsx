@@ -28,7 +28,7 @@ function Form() {
           account: { organization: issuerId },
         } = jwt_decode(token);
         console.log(issuerId);
-        const tempSchemaLink = `https://api-staging.polygonid.com/v1/issuers/${issuerId}/schemas/482f65b2-58d7-4cac-a965-f0ccb20753d9`;
+        const tempSchemaLink = `https://api-staging.polygonid.com/v1/issuers/${issuerId}/schemas/79f8347f-f832-4294-a4da-ed19f706b1bd`;
         setClaimLink(`${tempSchemaLink}/offers`);
         console.log(tempSchemaLink);
         return { token, tempSchemaLink };
