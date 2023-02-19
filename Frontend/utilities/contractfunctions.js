@@ -1,15 +1,36 @@
 import { ethers } from 'ethers';
 import { obj } from '../constants/contract';
 export function getContract() {
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-  console.log('Contract Address', obj.contractAddress);
-  const signer = provider.getSigner();
-  let contract = new ethers.Contract(
-    obj.contractAddress, // Our contract adress
-    obj.contractABI, // Our contract ABI
-    signer
-  );
-  return contract;
+  try {
+    const provider = new ethers.providers.Web3Provider(window.ethereum); // address #0 not found
+    console.log('Contract Address', obj.contractAddress);
+    const signer = provider.getSigner();
+    let contract = new ethers.Contract(
+      obj.contractAddress, // Our contract adress
+      obj.contractABI, // Our contract ABI
+      signer
+    );
+    console.log('Contract', contract);
+    return contract;
+  } catch (err) {
+    console.log('Error in getContract', err);
+  }
+}
+export function getContract1() {
+  try {
+    const provider = new ethers.providers.Web3Provider(window.ethereum); // address #0 not found
+    console.log('Contract Address', obj.contractAddress);
+    // const signer = provider.getSigner();
+    let contract = new ethers.Contract(
+      obj.contractAddress, // Our contract adress
+      obj.contractABI, // Our contract ABI
+      provider
+    );
+    console.log('Contract', contract);
+    return contract;
+  } catch (err) {
+    console.log('Error in getContract', err);
+  }
 }
 // function to register a new user
 export async function registerUser1(account) {
@@ -34,14 +55,14 @@ export async function createLicence(price, Duration, _metaData) {
 }
 // function getAllAtomicsByItemType
 export async function getAllAtomicsByItemType(_itemType) {
-  let contract = getContract();
+  let contract = getContract1();
   let atomics = await contract.getAllAtomicsByItemType(_itemType);
   return atomics;
 }
 
 // function getAllCollectionsByItemType
 export async function getAllCollectionsByItemType(_itemType) {
-  let contract = getContract();
+  let contract = getContract1();
   let collections = await contract.getAllCollectionsByItemType(_itemType);
   return collections;
 }
@@ -76,40 +97,40 @@ export async function buyDeItem(_licenseId, _deItemId, _assetType, price) {
 
 // function to get user details
 export async function getUserDetails() {
-  let contract = getContract();
+  let contract = getContract1();
   let user = await contract.getUserDetails(window.ethereum.selectedAddress);
   return user;
 }
 // function getDeItemById
 export async function getDeItemById(_deItemId, _assetType) {
-  let contract = getContract();
+  let contract = getContract1();
   let deItem = await contract.getDeItemById(_deItemId, _assetType);
   return deItem;
 }
 
 // function getDeItemsByType
 export async function getDeItemsByType(_deItemIds, _assetType) {
-  let contract = getContract();
+  let contract = getContract1();
   let deItems = await contract.getDeItemsByType(_deItemIds, _assetType);
   return deItems;
 }
 
 // function to get all Atomics
 export async function getAllAtomics() {
-  let contract = getContract();
+  let contract = getContract1();
   let atomics = await contract.getAllAtomics();
   return atomics;
 }
 // function to get all Collections
 export async function getAllCollections() {
-  let contract = getContract();
+  let contract = getContract1();
   let collections = await contract.getAllCollections();
   return collections;
 }
 
 // function to get all licences
 export async function getAllLicences() {
-  let contract = getContract();
+  let contract = getContract1();
   let licences = await contract.getAllLicenses();
   return licences;
 }

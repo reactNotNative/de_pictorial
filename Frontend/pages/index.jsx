@@ -11,8 +11,10 @@ import {
   Button,
 } from '@mantine/core';
 import Draggable from '../components/Draggable';
-
-import thumbnail from '../constants/images';
+import { getDeItemById, getAllAtomics } from '../utilities/contractfunctions';
+// import { toast } from 'react-hot-toast';
+// import thumbnail from '../constants/images';
+import checkWalletConnected from '../utilities/checkWalletConnected';
 const useStyles = createStyles((theme) => ({
   draggable: {
     display: 'flex',
@@ -28,8 +30,24 @@ const useStyles = createStyles((theme) => ({
 const Home = () => {
   const [vantaEffect, setVantaEffect] = useState(null);
   const { classes } = useStyles();
+  const [deItemsArray, setDeItemsArray] = useState([]);
 
   const theme = useMantineTheme();
+  function getAllMedia() {
+    getAllAtomics().then((res) => {
+      console.log('RES: ', res);
+      setDeItemsArray((prev) => [...prev, ...res]);
+    });
+  }
+
+  useEffect(() => {
+    try {
+      checkWalletConnected();
+      getAllMedia();
+    } catch (err) {
+      toast.error(err['reason']);
+    }
+  }, []);
 
   const myRef = useRef(null);
   useEffect(() => {
@@ -117,15 +135,23 @@ const Home = () => {
             </p>
           </div>
           <div className="flex w-full gap-10 overflow-x-auto">
-            {/* <Draggable className={classes.draggable}>
-              <>
-                {thumbnail.map((image, id) => (
+            {deItemsArray &&
+              deItemsArray?.map((image, id) => {
+                if (image['Owner'].includes('0x0000000')) return null;
+                return (
                   <div className={classes.card} key={id}>
-                    <DisplayCard image={image} />
+                    <DisplayCard
+                      image={image}
+                      AssetType={image['AssetType']}
+                      Id={image['Id']}
+                      ItemType={image['ItemType']}
+                      Owner={image['Owner']}
+                      licenseIds={image['licenseIds']}
+                      metaData={image['metaData']}
+                    />
                   </div>
-                ))}
-              </>
-            </Draggable> */}
+                );
+              })}
           </div>
         </section>
         <section className="container w-[95%] backdrop-blur-md mt-20 bg-opacity-10 rounded-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
@@ -136,15 +162,23 @@ const Home = () => {
             </p>
           </div>
           <div className="flex w-full gap-10 overflow-x-auto">
-            {/* <Draggable className={classes.draggable}>
-              <>
-                {thumbnail.map((image, id) => (
+            {deItemsArray &&
+              deItemsArray?.map((image, id) => {
+                if (image['Owner'].includes('0x0000000')) return null;
+                return (
                   <div className={classes.card} key={id}>
-                    <DisplayCard image={image} />
+                    <DisplayCard
+                      image={image}
+                      AssetType={image['AssetType']}
+                      Id={image['Id']}
+                      ItemType={image['ItemType']}
+                      Owner={image['Owner']}
+                      licenseIds={image['licenseIds']}
+                      metaData={image['metaData']}
+                    />
                   </div>
-                ))}
-              </>
-            </Draggable> */}
+                );
+              })}
           </div>
         </section>
         {/* <NewItemForm /> */}

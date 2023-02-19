@@ -13,6 +13,9 @@ import thumbnail from '../constants/images';
 import DisplayCard from './../components/DisplayCard';
 import Draggable from './../components/Draggable';
 import { getDeItemById, getAllAtomics } from '../utilities/contractfunctions';
+import { toast } from 'react-hot-toast';
+import checkWalletConnected from '../utilities/checkWalletConnected';
+
 const useStyles = createStyles((theme) => ({
   draggable: {
     display: 'flex',
@@ -41,6 +44,7 @@ const categories = () => {
 
   useEffect(() => {
     try {
+      checkWalletConnected();
       getAllMedia();
     } catch (err) {
       toast.error(err['reason']);

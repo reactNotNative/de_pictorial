@@ -22,6 +22,7 @@ import { isModalOpenAtom, userDataAtom } from '../store/global';
 import { useAtom } from 'jotai';
 import { providers } from 'ethers';
 import { toast } from 'react-hot-toast';
+import checkWalletConnected from '../utilities/checkWalletConnected';
 const dashboard = () => {
   const myRef = useRef(null);
   const [vantaEffect, setVantaEffect] = useState(null);
@@ -31,6 +32,7 @@ const dashboard = () => {
   const [isRegistered, setIsRegistered] = useState(false);
   const [purchases, setPurchases] = useState([]);
   const [refetch, setRefetch] = useState(false);
+  const [loading, setLoading] = useState(true);
   const useStyles = createStyles((theme) => ({
     draggable: {
       display: 'flex',
@@ -46,32 +48,32 @@ const dashboard = () => {
 
   const [account, setAccount] = useState(null);
 
-  const checkWalletConnected = async () => {
-    const { ethereum } = window;
+  // const checkWalletConnected = async () => {
+  //   const { ethereum } = window;
 
-    if (!ethereum) {
-      toast.error('Install Metamask');
-      return;
-    }
+  //   if (!ethereum) {
+  //     toast.error('Install Metamask');
+  //     return;
+  //   }
 
-    const accounts = await ethereum.request({
-      method: 'eth_accounts',
-    });
+  //   const accounts = await ethereum.request({
+  //     method: 'eth_accounts',
+  //   });
 
-    if (accounts.length !== 0) {
-      const account = accounts[0];
-      let provider = new providers.Web3Provider(window.ethereum);
-      let network = await provider.getNetwork();
-      setAccount(account);
-      if (network.name !== 'maticmum') {
-        toast.error('Wrong Network');
-      } else {
-        toast.success('Maticum Connected');
-      }
-    } else {
-      toast.error('Create a Ethereum Account');
-    }
-  };
+  //   if (accounts.length !== 0) {
+  //     const account = accounts[0];
+  //     let provider = new providers.Web3Provider(window.ethereum);
+  //     let network = await provider.getNetwork();
+  //     setAccount(account);
+  //     if (network.name !== 'maticmum') {
+  //       toast.error('Wrong Network');
+  //     } else {
+  //       toast.success('Maticum Connected');
+  //     }
+  //   } else {
+  //     toast.error('Create a Ethereum Account');
+  //   }
+  // };
   function getPurchases(res) {
     let purchases = [];
     for (let i = 0; i < res['purchaseDetails'].length; i++) {
@@ -87,20 +89,29 @@ const dashboard = () => {
     }
     return purchases;
   }
+
   useEffect(() => {
-    getContract();
-    checkWalletConnected();
-    isUserRegistered().then((res) => {
-      setIsRegistered(res);
+    try {
+      getContract();
+      checkWalletConnected().then((res) => {
+        console.log('res:', res);
+        if (res.success) setAccount(res.account);
+      });
+      isUserRegistered().then((res) => {
+        console.log('isRegistered:', res);
+        setIsRegistered(res);
 
-      if (res) {
-        getUserDetails().then((res) => {
-          getPurchases(res);
+        if (res) {
+          getUserDetails().then((res) => {
+            getPurchases(res);
 
-          setUserDetails(res);
-        });
-      }
-    });
+            setUserDetails(res);
+          });
+        }
+      });
+    } catch (err) {
+      toast.error(err['reason']);
+    }
   }, [refetch]);
 
   useEffect(() => {
