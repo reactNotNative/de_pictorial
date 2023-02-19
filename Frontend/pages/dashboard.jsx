@@ -116,6 +116,7 @@ const dashboard = () => {
 
   useEffect(() => {
     console.log('userDetails:', userDetails);
+    setVantaEffect(null);
   }, [userDetails]);
 
   useEffect(() => {
@@ -142,13 +143,13 @@ const dashboard = () => {
   }, [vantaEffect]);
   return (
     <div
-      className="flex flex-col items-center w-screen h-full pt-24 gap-10 min-h-screen"
+      className="flex flex-col items-center w-screen h-full pt-24 p-10 gap-10 min-h-screen"
       ref={myRef}
     >
-      <section className="container inline-flex flex-col items-start  gap-20 p-10 mx-auto">
+      <section className="container inline-flex items-center justify-between w-full pt-4  gap-20  mx-auto">
         <div className="flex">
           <div>
-            <Group noWrap className="h-full">
+            <Group noWrap>
               <Avatar
                 src={`https://api.dicebear.com/5.x/pixel-art/svg?seed=${account?.toUpperCase()}&options[mood][]=happy`}
                 size={154}
@@ -169,50 +170,71 @@ const dashboard = () => {
                 </Text>
               </div>
             </Group>
-            {!isRegistered && (
-              <Button
-                onClick={async () => {
-                  try {
-                    await registerUser1(account);
-                    setRefetch(!refetch);
-                    toast.success('Registered Successfully');
-                  } catch (err) {
-                    toast.error(err['reason']);
-                  }
-                }}
-                size="md"
-                className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
-                styles={{
-                  root: { border: 'none' },
-                }}
-              >
-                Register
-              </Button>
-            )}
-
-            {isRegistered && (
-              <div className="inline-flex w-full">
-                {userDetails?.['licenseDetails'].map((license, idd) => {
-                  return (
-                    <div
-                      className="inline-flex flex-col space-y-2 items-start justify-start w-1/2"
-                      key={idd}
-                    >
-                      <SubscriptionLabel
-                        license={license}
-                        AssetType={-1}
-                        Id={-1}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            )}
           </div>
         </div>
+        {!isRegistered && (
+          <Button
+            onClick={async () => {
+              try {
+                await registerUser1(account);
+                setRefetch(!refetch);
+                toast.success('Registered Successfully');
+              } catch (err) {
+                toast.error(err['reason']);
+              }
+            }}
+            size="xl"
+            className="bg-gradient-to-r from-rose-400 via-fuchsia-500 p-10 to-indigo-500"
+            styles={{
+              root: { border: 'none' },
+            }}
+          >
+            Register
+          </Button>
+        )}
       </section>
+      {!isRegistered && (
+        <p className="text-7xl py-5 text-center w-full grow font-extrabold opacity-60 ">
+          User not registered <br /> Register first
+        </p>
+      )}
       {isRegistered && (
-        <section className="container w-[95%] backdrop-blur-md bg-opacity-10 rounded-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
+        <section className="container w-full backdrop-blur-md bg-opacity-10 rounded-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
+          <div className="inline-flex items-end justify-between w-full space-x-5">
+            <p className="text-4xl font-bold leading-10">My Licenses</p>
+            <Button
+              onClick={() => setIsLicenceModalOpen(true)}
+              size="md"
+              className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
+              styles={{
+                root: { border: 'none' },
+              }}
+            >
+              Create License
+            </Button>
+          </div>
+          <div className="w-full flex justify-between gap-4">
+            {userDetails?.['licenseDetails'].map((license, idd) => {
+              return (
+                <SubscriptionLabel
+                  key={idd}
+                  license={license}
+                  AssetType={-1}
+                  Id={-1}
+                />
+              );
+            })}{' '}
+            {!userDetails?.['licenseDetails'] && (
+              <p className="text-4xl font-extrabold opacity-60 leading-10">
+                No licenses found <br /> Create first
+              </p>
+            )}
+          </div>
+        </section>
+      )}
+
+      {isRegistered && (
+        <section className="container backdrop-blur-md bg-opacity-10 rounded-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
           <div className="inline-flex items-end justify-between w-full space-x-5">
             <p className="text-4xl font-bold leading-10">Uploaded Items</p>
             <Button
@@ -250,7 +272,7 @@ const dashboard = () => {
       )}
 
       {isRegistered && (
-        <section className="container w-[95%] backdrop-blur-md bg-opacity-10 rounded-t-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
+        <section className="container backdrop-blur-md bg-opacity-10 rounded-t-xl bg-white mx-auto p-5 inline-flex flex-col gap-10 items-start justify-center">
           <div className="inline-flex items-end justify-between w-full space-x-5">
             <p className="text-4xl font-bold leading-10">Purchased Licenses</p>
             <Button

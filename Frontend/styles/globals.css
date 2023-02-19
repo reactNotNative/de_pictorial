@@ -20,6 +20,11 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background-color: rgba(184, 184, 184, 0.5);
+  /* border-radius: 10px; */
+  background: linear-gradient(
+    to bottom,
+    rgb(251, 113, 133),
+    rgb(217, 70, 239),
+    rgb(99, 102, 241)
+  );
 }

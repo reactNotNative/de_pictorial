@@ -75,8 +75,11 @@ const Home = () => {
   return (
     <>
       {/* <Hero /> */}
-      <div className="flex flex-col items-center w-screen h-full" ref={myRef}>
-        <section className="container inline-flex flex-col items-start justify-center min-h-screen gap-20 p-10 mx-auto">
+      <div
+        className="flex flex-col items-center w-screen overflow-hidden"
+        ref={myRef}
+      >
+        <section className="container inline-flex flex-col items-start justify-center h-screen py-0 gap-20 p-10 mx-auto">
           <div className="flex flex-col items-start justify-center gap-3 text-left">
             <div className="inline-flex items-center justify-between space-x-5 font-bold text-white text-8xl">
               {/* <p className="-ml-8 font-bold text-white text-8xl">

@@ -5,13 +5,13 @@ import {
   Text,
   ThemeIcon,
   SimpleGrid,
-} from '@mantine/core';
-import { useEffect, useState } from 'react';
-import { FaEthereum } from 'react-icons/fa';
-import { buyDeItem } from '../utilities/contractfunctions';
-import { Button } from '@mantine/core';
-import { toast } from 'react-hot-toast';
-import { utils } from 'ethers';
+} from "@mantine/core";
+import { useEffect, useState } from "react";
+import { FaEthereum } from "react-icons/fa";
+import { buyDeItem } from "../utilities/contractfunctions";
+import { Button } from "@mantine/core";
+import { toast } from "react-hot-toast";
+import { utils } from "ethers";
 const useStyles = createStyles((theme) => ({
   root: {
     padding: theme.spacing.xl * 1.5,
@@ -28,30 +28,30 @@ function SubscriptionLabel({ license, AssetType, Id }) {
   const { classes } = useStyles();
   async function buy() {
     try {
-      await buyDeItem(license['Id'], Id, AssetType, license['Price']);
+      await buyDeItem(license["Id"], Id, AssetType, license["Price"]);
       toast.success(`Item bought`);
     } catch (err) {
-      toast.error(`Error buying item ${err['reason']} `);
+      toast.error(`Error buying item ${err["reason"]} `);
     }
   }
   useEffect(() => {
     let licenseObj = {
-      id: license['Id'],
-      duration: license['Duration'],
-      price: license['Price'],
-      metaData: JSON.parse(license['metaData']),
+      id: license["Id"],
+      duration: license["Duration"],
+      price: license["Price"],
+      metaData: JSON.parse(license["metaData"]),
     };
     setLicense(licenseObj);
   }, []);
   useEffect(() => {
-    console.log('licenseState:', licenseState);
+    console.log("licenseState:", licenseState);
   }, [licenseState]);
 
   const DiffIcon = FaEthereum;
 
   return (
-    <div className="flex flex-wrap justify-start gap-4">
-      {' '}
+    <div className="flex flex-wrap justify-start gap-4 grow">
+      {" "}
       <Paper
         withBorder
         p="md"
@@ -64,17 +64,25 @@ function SubscriptionLabel({ license, AssetType, Id }) {
             <Text
               color="dimmed"
               weight={700}
-              size="xs"
+              size="lg"
               className={classes.label}
             >
-              {licenseState['metaData'] && licenseState['metaData']['name']}
-              {' - '}
-              {licenseState['metaData'] &&
-                licenseState['duration'] + ' Days Left'}
+              {licenseState["metaData"] && licenseState["metaData"]["name"]}
+              {" - "}
+              <Text
+                color="dimmed"
+                weight={700}
+                size="xs"
+                className={classes.label}
+              >
+                {licenseState["metaData"] &&
+                  licenseState["duration"] + " Days Left"}
+              </Text>
             </Text>
+
             <Text weight={700} size="lg">
-              {licenseState['price'] &&
-                utils.formatEther(licenseState['price'])}{' '}
+              {licenseState["price"] &&
+                utils.formatEther(licenseState["price"])}
               MATIC
             </Text>
           </div>
@@ -85,7 +93,7 @@ function SubscriptionLabel({ license, AssetType, Id }) {
               size="xs"
               className={classes.label}
             >
-              {licenseState['Price'] && licenseState['Price'].toNumber()}
+              {licenseState["Price"] && licenseState["Price"].toNumber()}
             </Text>
           </div>
           {AssetType != -1 && Id != -1 && (
@@ -94,7 +102,7 @@ function SubscriptionLabel({ license, AssetType, Id }) {
               size="md"
               className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
               styles={{
-                root: { border: 'none' },
+                root: { border: "none" },
               }}
             >
               <ThemeIcon color="gray" variant="light" size={38} radius="md">
