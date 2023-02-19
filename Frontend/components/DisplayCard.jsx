@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { AiOutlineHeart } from 'react-icons/ai';
-import { Badge, Button } from '@mantine/core';
-import Router from 'next/router';
-import { mediaInfoAtom } from '../store/global';
-import { useAtom } from 'jotai';
+import React, { useEffect, useState } from "react";
+import { AiOutlineHeart } from "react-icons/ai";
+import { Badge, Button, Modal } from "@mantine/core";
+import Router from "next/router";
+import { mediaInfoAtom } from "../store/global";
+import { useAtom } from "jotai";
+import Form from "../components/Form";
 const DisplayCard = ({
   image,
   AssetType,
@@ -12,21 +13,24 @@ const DisplayCard = ({
   Owner,
   licenseIds,
   metaData,
+  isOwner = false,
+  LicenseData = false,
 }) => {
   const [cardImage, SetcardImage] = useAtom(mediaInfoAtom);
   const [obj, setObj] = useState(null);
+  const [opened, setOpened] = useState(false);
   useEffect(() => {
     let newMetaData = metaData.replace(
-      'ipfs://',
-      'https://cloudflare-ipfs.com/ipfs/'
+      "ipfs://",
+      "https://cloudflare-ipfs.com/ipfs/"
     );
 
     fetch(newMetaData)
       .then((res) => res.json())
       .then((data) => {
         let newImageLink = data.image.replace(
-          'ipfs://',
-          'https://cloudflare-ipfs.com/ipfs/'
+          "ipfs://",
+          "https://cloudflare-ipfs.com/ipfs/"
         );
         let obj = {
           AssetType: AssetType,
@@ -34,13 +38,13 @@ const DisplayCard = ({
           ItemType: ItemType,
           Owner: Owner,
           licenseIds: licenseIds,
-          collection: data['collection'],
-          description: data['description'],
+          collection: data["collection"],
+          description: data["description"],
           image: newImageLink,
-          price: data['price'],
-          mediaType: data['mediaType'],
-          name: data['name'],
-          tags: data['tags'],
+          price: data["price"],
+          mediaType: data["mediaType"],
+          name: data["name"],
+          tags: data["tags"],
         };
         setObj(obj);
         SetcardImage([...cardImage, obj]);
@@ -53,7 +57,7 @@ const DisplayCard = ({
         <div
           className={`inline-flex items-end grow justify-center rounded-lg h-72 px-4 pb-4 w-full object-cover `}
           style={{
-            backgroundSize: 'contain',
+            backgroundSize: "contain",
             background: ` linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(0, 0, 0, 0) 73.23%, #000000 100%) , url(${obj?.image}) center center/cover no-repeat fixed`,
           }}
         >
@@ -68,7 +72,7 @@ const DisplayCard = ({
                   Created by
                 </p>
                 <p className="text-base font-bold leading-tight text-gray-50">
-                  {obj?.Owner?.slice(0, 4)} ...{' '}
+                  {obj?.Owner?.slice(0, 4)} ...{" "}
                   {obj?.Owner?.slice(
                     obj?.Owner?.length - 4,
                     obj?.Owner?.length
@@ -99,12 +103,28 @@ const DisplayCard = ({
           size="md"
           color="gray"
           styles={{
-            root: { border: 'none' },
+            root: { border: "none" },
           }}
         >
           View Media
         </Button>
       </div>
+      <Button
+        onClick={() => setOpened(true)}
+        size="md"
+        color="dark"
+        styles={{
+          root: { border: "none", width: "100%" },
+        }}
+      >
+        Airdrop
+      </Button>
+      <Modal
+        opened={opened}
+        onClose={() => setOpened(false)}
+      >
+        <Form LicenseData={LicenseData} />
+      </Modal>
     </div>
   );
 };

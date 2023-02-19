@@ -1,14 +1,14 @@
-import FOG from 'vanta/dist/vanta.fog.min.js';
-import React, { useState, useEffect, useRef } from 'react';
-import { createStyles, Avatar, Text, Group } from '@mantine/core';
-import { AiFillPhone, AiAt } from 'react-icons/ai';
-import NewItemForm from '../components/NewItemForm';
-import LicenceForm from '../components/LicenceForm';
-import Draggable from '../components/Draggable';
-import DisplayCard from './../components/DisplayCard';
-import SubscriptionLabel from './../components/SubscriptionLabel';
+import FOG from "vanta/dist/vanta.fog.min.js";
+import React, { useState, useEffect, useRef } from "react";
+import { createStyles, Avatar, Text, Group } from "@mantine/core";
+import { AiFillPhone, AiAt } from "react-icons/ai";
+import NewItemForm from "../components/NewItemForm";
+import LicenceForm from "../components/LicenceForm";
+import Draggable from "../components/Draggable";
+import DisplayCard from "./../components/DisplayCard";
+import SubscriptionLabel from "./../components/SubscriptionLabel";
 
-import { Button } from '@mantine/core';
+import { Button } from "@mantine/core";
 import {
   getContract,
   getDeItemById,
@@ -17,12 +17,12 @@ import {
   registerUser1,
   createLicence,
   createDeItem,
-} from '../utilities/contractfunctions';
-import { isModalOpenAtom, userDataAtom } from '../store/global';
-import { useAtom } from 'jotai';
-import { providers } from 'ethers';
-import { toast } from 'react-hot-toast';
-import checkWalletConnected from '../utilities/checkWalletConnected';
+} from "../utilities/contractfunctions";
+import { isModalOpenAtom, userDataAtom } from "../store/global";
+import { useAtom } from "jotai";
+import { providers } from "ethers";
+import { toast } from "react-hot-toast";
+import checkWalletConnected from "../utilities/checkWalletConnected";
 const dashboard = () => {
   const myRef = useRef(null);
   const [vantaEffect, setVantaEffect] = useState(null);
@@ -35,13 +35,13 @@ const dashboard = () => {
   const [loading, setLoading] = useState(true);
   const useStyles = createStyles((theme) => ({
     draggable: {
-      display: 'flex',
-      marginBottom: '16px',
-      overflowX: 'auto',
-      gap: '20px',
-      width: '100%',
-      cursor: 'pointer',
-      padding: '8px 0',
+      display: "flex",
+      marginBottom: "16px",
+      overflowX: "auto",
+      gap: "20px",
+      width: "100%",
+      cursor: "pointer",
+      padding: "8px 0",
     },
   }));
   const { classes } = useStyles();
@@ -76,9 +76,9 @@ const dashboard = () => {
   // };
   function getPurchases(res) {
     let purchases = [];
-    for (let i = 0; i < res['purchaseDetails'].length; i++) {
+    for (let i = 0; i < res["purchaseDetails"].length; i++) {
       purchases.push(
-        getDeItemById(res['purchaseDetails'][i]['DeItemId'].toNumber(), 0).then(
+        getDeItemById(res["purchaseDetails"][i]["DeItemId"].toNumber(), 0).then(
           (res) => {
             // console.log('Purchases:', res);
             setPurchases((prev) => [...prev, res]);
@@ -94,11 +94,11 @@ const dashboard = () => {
     try {
       getContract();
       checkWalletConnected().then((res) => {
-        console.log('res:', res);
+        console.log("res:", res);
         if (res.success) setAccount(res.account);
       });
       isUserRegistered().then((res) => {
-        console.log('isRegistered:', res);
+        console.log("isRegistered:", res);
         setIsRegistered(res);
 
         if (res) {
@@ -110,12 +110,12 @@ const dashboard = () => {
         }
       });
     } catch (err) {
-      toast.error(err['reason']);
+      toast.error(err["reason"]);
     }
   }, [refetch]);
 
   useEffect(() => {
-    console.log('userDetails:', userDetails);
+    console.log("userDetails:", userDetails);
     setVantaEffect(null);
   }, [userDetails]);
 
@@ -158,7 +158,7 @@ const dashboard = () => {
               <div className="flex flex-col h-full">
                 <Text
                   size="xs"
-                  sx={{ textTransform: 'uppercase' }}
+                  sx={{ textTransform: "uppercase" }}
                   weight={700}
                   color="dimmed"
                 >
@@ -178,15 +178,15 @@ const dashboard = () => {
               try {
                 await registerUser1(account);
                 setRefetch(!refetch);
-                toast.success('Registered Successfully');
+                toast.success("Registered Successfully");
               } catch (err) {
-                toast.error(err['reason']);
+                toast.error(err["reason"]);
               }
             }}
             size="xl"
             className="bg-gradient-to-r from-rose-400 via-fuchsia-500 p-10 to-indigo-500"
             styles={{
-              root: { border: 'none' },
+              root: { border: "none" },
             }}
           >
             Register
@@ -207,14 +207,14 @@ const dashboard = () => {
               size="md"
               className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
               styles={{
-                root: { border: 'none' },
+                root: { border: "none" },
               }}
             >
               Create License
             </Button>
           </div>
           <div className="w-full flex justify-between gap-4">
-            {userDetails?.['licenseDetails'].map((license, idd) => {
+            {userDetails?.["licenseDetails"].map((license, idd) => {
               return (
                 <SubscriptionLabel
                   key={idd}
@@ -223,8 +223,8 @@ const dashboard = () => {
                   Id={-1}
                 />
               );
-            })}{' '}
-            {!userDetails?.['licenseDetails'] && (
+            })}
+            {!userDetails?.["licenseDetails"] && (
               <p className="text-4xl font-extrabold opacity-60 leading-10">
                 No licenses found <br /> Create first
               </p>
@@ -242,7 +242,7 @@ const dashboard = () => {
               size="md"
               className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
               styles={{
-                root: { border: 'none' },
+                root: { border: "none" },
               }}
             >
               Upload
@@ -251,17 +251,19 @@ const dashboard = () => {
           <div className="flex w-full gap-10 overflow-x-auto">
             <Draggable className={classes.draggable}>
               {userDetails &&
-                userDetails['atomicDetails']?.map((image, id) => {
+                userDetails["atomicDetails"]?.map((image, id) => {
                   return (
                     <div className={classes.card} key={id}>
                       <DisplayCard
+                        LicenseData={userDetails?.["licenseDetails"]}
                         image={image}
-                        AssetType={image['AssetType']}
-                        Id={image['Id']}
-                        ItemType={image['ItemType']}
-                        Owner={image['Owner']}
-                        licenseIds={image['licenseIds']}
-                        metaData={image['metaData']}
+                        AssetType={image["AssetType"]}
+                        Id={image["Id"]}
+                        ItemType={image["ItemType"]}
+                        Owner={image["Owner"]}
+                        licenseIds={image["licenseIds"]}
+                        metaData={image["metaData"]}
+                        isOwner={true}
                       />
                     </div>
                   );
@@ -280,7 +282,7 @@ const dashboard = () => {
               size="md"
               className="bg-gradient-to-r from-rose-400 via-fuchsia-500 to-indigo-500"
               styles={{
-                root: { border: 'none' },
+                root: { border: "none" },
               }}
             >
               Create License
@@ -292,13 +294,13 @@ const dashboard = () => {
                 return (
                   <div className={classes.card} key={id}>
                     <DisplayCard
-                      image={image['deItemDetails']}
-                      AssetType={image['deItemDetails']['AssetType']}
-                      Id={image['deItemDetails']['Id']}
-                      ItemType={image['deItemDetails']['ItemType']}
-                      Owner={image['deItemDetails']['Owner']}
-                      licenseIds={image['deItemDetails']['licenseIds']}
-                      metaData={image['deItemDetails']['metaData']}
+                      image={image["deItemDetails"]}
+                      AssetType={image["deItemDetails"]["AssetType"]}
+                      Id={image["deItemDetails"]["Id"]}
+                      ItemType={image["deItemDetails"]["ItemType"]}
+                      Owner={image["deItemDetails"]["Owner"]}
+                      licenseIds={image["deItemDetails"]["licenseIds"]}
+                      metaData={image["deItemDetails"]["metaData"]}
                     />
                   </div>
                 );
